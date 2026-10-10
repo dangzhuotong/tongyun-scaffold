@@ -12,7 +12,7 @@ SKILLS=(
   tong-deploy-pro
 )
 
-REPO_URL="${TONGYUN_SKILLS_PLUS_GIT:-https://github.com/dangzhuotong/tongyun-skills-plus.git}"
+REPO_URL="${TONGYUN_SKILLS_PLUS_GIT:-git@github.com:dangzhuotong/tongyun-skills-plus.git}"
 CACHE="${TONGYUN_SKILLS_PLUS:-$HOME/.cache/tongyun-skills-plus}"
 
 if [[ -d "${TONGYUN_SKILLS_PLUS:-}/skills" ]]; then
