@@ -14,9 +14,13 @@ cp "$TPL/docs/plan.md" "$TARGET/docs/plan.md"
 cp "$TPL/docs/architecture.md" "$TARGET/docs/architecture.md"
 cp "$TPL/docs/development.md" "$TARGET/docs/development.md"
 cp "$TPL/docs/user-flows.md" "$TARGET/docs/user-flows.md"
+cp "$TPL/docs/skills.md" "$TARGET/docs/skills.md"
 cp "$TPL/docs/testing/acceptance-tests.md" "$TARGET/docs/testing/acceptance-tests.md"
 cp "$TPL/docs/decisions/"* "$TARGET/docs/decisions/"
 if [[ ! -f "$TARGET/.gitignore" ]]; then
   printf '%s\n' .DS_Store .env '.env.*' '!.env.example' 'secrets*' '*.pem' node_modules/ target/ dist/ build/ .venv/ > "$TARGET/.gitignore"
 fi
+mkdir -p "$TARGET/scripts"
+cp "$ROOT/scripts/install-coding-skills.sh" "$TARGET/scripts/"
+chmod +x "$TARGET/scripts/install-coding-skills.sh"
 echo "已写入 $TARGET ：AGENTS.md docs/ .gitignore"
