@@ -26,7 +26,7 @@
 
 ## 配套技能（本仓特殊约束）
 
-本仓是公开脚手架，**只放脚本和模板，绝不提交 skill 正文**（tongyun-skills-plus 私有、商业许可）。skill 由 `scripts/init-project.sh` → `scripts/sync-skills.sh` 复制进**新项目**的 `.agents/skills/`。生成项目的规则模板见 [templates/AGENTS.md](templates/AGENTS.md)，说明见 [docs/skills.md](docs/skills.md)。改脚本后跑 `bash scripts/selftest.sh`。
+本仓是公开脚手架，**只放脚本和模板，绝不提交 skill 正文**（lite 版在单独的开源仓，pro 版在私有、商业许可的 tongyun-skills-plus）。skill 由 `scripts/init-project.sh` → `scripts/sync-skills.sh` 按 `--edition lite|pro`（默认 lite）复制进**新项目**的 `.agents/skills/`。生成项目的规则模板见 [templates/AGENTS.md](templates/AGENTS.md)，说明见 [docs/skills.md](docs/skills.md)。改脚本后跑 `bash scripts/selftest.sh`。
 
 ## 修改约束
 
