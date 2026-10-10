@@ -31,12 +31,14 @@ bash scripts/init-project.sh "my-app" "一句话说明这个项目做什么"
 
 默认挂 **Coding 套装**（7 个工种）：project / product / ui / api / test / code-review / deploy。详见 [docs/skills.md](docs/skills.md)。
 
+这些是**项目级** skill：装进仓库的 `.cursor/skills`，不要灌进本机全局 `~/.cursor/skills`。
+
 ```bash
-# 本机已能拉私有仓 tongyun-skills-plus 时：
+# 在项目根目录；需能 SSH 拉私有仓 tongyun-skills-plus
 bash scripts/install-coding-skills.sh
 ```
 
-装好后用 `$tong-project-pro` 等触发。内容/视频套装另见 skills-plus 的 bundles，不塞进本脚手架默认安装。
+装好后在打开该仓库的 Agent 会话里用 `$tong-project-pro` 等。内容/视频套装另见 skills-plus，不进默认安装。
 
 ## 许可
 

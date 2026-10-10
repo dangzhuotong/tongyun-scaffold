@@ -26,11 +26,11 @@
 
 ## 配套技能
 
-开发默认用 Coding 套装，清单与安装见 [docs/skills.md](docs/skills.md)。执行前读取该技能真实 `SKILL.md`。登记 ≠ 已安装。
+开发默认用 Coding 套装，清单与安装见 [docs/skills.md](docs/skills.md)。**项目级安装**（`.cursor/skills`），不要装进本机全局 skills。执行前读取该技能真实 `SKILL.md`。
 
 | 任务 | 技能 | 状态 |
 | --- | --- | --- |
-| 项目规范 / 工种路由 | tong-project-pro | 见 install-coding-skills.sh |
+| 项目规范 / 工种路由 | tong-project-pro | `bash scripts/install-coding-skills.sh` |
 | 需求 / 验收 | tong-product-pro | 同上 |
 | Web 界面 | tong-ui-design-pro | 同上 |
 | 后端 API / 迁移 | tong-api-pro | 同上 |
