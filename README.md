@@ -14,6 +14,8 @@ bash scripts/init-project.sh "my-app" "一句话说明这个项目做什么"
 # 然后改 remote 指向你的新仓
 ```
 
+`bash scripts/selftest.sh` 自检。
+
 `init-project.sh` 会写入：`AGENTS.md`、`docs/*` 骨架、`.gitignore` 建议项；**不会**替你选技术栈或装依赖。
 
 ## 轻量 DDD（给 Agent 用）

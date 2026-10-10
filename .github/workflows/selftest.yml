@@ -1,0 +1,15 @@
+name: selftest
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  selftest:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: init-project selftest (macOS 用系统 /bin/bash 3.2)
+        run: /bin/bash scripts/selftest.sh
