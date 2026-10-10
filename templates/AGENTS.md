@@ -1,6 +1,6 @@
 # {{PROJECT_NAME}} · AI 开发规则
 
-所有在本仓库工作的 agent 先读本文件。细节链接到各自唯一维护的文档，不要在多处复制命令表。
+所有在本仓库工作的 agent 先读本文件（`CLAUDE.md` 是它的软链）。细节链接到各自唯一维护的文档，不要在多处复制命令表。
 
 ## 项目与修改入口
 
@@ -16,28 +16,26 @@
 | 命令、CI | [docs/development.md](docs/development.md) |
 | 主流程 | [docs/user-flows.md](docs/user-flows.md) |
 | 测试 | [docs/testing/acceptance-tests.md](docs/testing/acceptance-tests.md) |
-| 长期决定 | [docs/decisions/](docs/decisions/) |
+| 长期决定 | [docs/decisions/](docs/decisions/)；设计取舍记 [.agents/notes/](.agents/notes/README.md) |
 
-## 开发与验证
+项目 skill 都在 `.agents/skills/`（随仓库提交，`.claude/skills`、`.cursor/skills` 指向同一份）。用到哪个，先读它的 `SKILL.md` 再动手。
 
-- 命令表只在 [docs/development.md](docs/development.md) 维护。未建立的入口标「未建立」，**不要声称跑过不存在的命令**。
-- 改动前读受影响上下文的规则和实现，写清目标行为与验收方式。
-- 交接写清：改了什么、实际跑了哪些检查、失败/跳过/未运行、下一步。
+## 开发流程
 
-## 配套技能
+1. **改规则 / 文档结构 / 加工种**：按 [tong-project-pro](.agents/skills/tong-project-pro/SKILL.md) 改本文件和 `docs/`。
+2. **需求、验收**：按 [tong-product-pro](.agents/skills/tong-product-pro/SKILL.md) 写进 [docs/prd.md](docs/prd.md)，保留 R-xx / AT-xx 编号。
+3. **实现**：
+   - Web 界面按 [tong-ui-design-pro](.agents/skills/tong-ui-design-pro/SKILL.md)；
+   - 后端接口、数据、迁移按 [tong-api-pro](.agents/skills/tong-api-pro/SKILL.md)。
+   改动前读受影响上下文的规则和实现，写清目标行为与验收方式。
+4. **推送前**：按 [tong-test-pro](.agents/skills/tong-test-pro/SKILL.md) 跑验收并如实记录结果，再按 [tong-code-review-pro](.agents/skills/tong-code-review-pro/SKILL.md) 审一遍 diff。只报实际跑过的命令。
+5. **部署**：只在用户明确授权范围内，按 [tong-deploy-pro](.agents/skills/tong-deploy-pro/SKILL.md) 执行，留健康证据和回滚说明。
 
-开发默认用 Coding 套装，清单与安装见 [docs/skills.md](docs/skills.md)。**项目级安装**（`.cursor/skills`），不要装进本机全局 skills。执行前读取该技能真实 `SKILL.md`。
+命令表只在 [docs/development.md](docs/development.md) 维护。未建立的入口标「未建立」，**不要声称跑过不存在的命令**。
 
-| 任务 | 技能 | 状态 |
-| --- | --- | --- |
-| 项目规范 / 工种路由 | tong-project-pro | `bash scripts/install-coding-skills.sh` |
-| 需求 / 验收 | tong-product-pro | 同上 |
-| Web 界面 | tong-ui-design-pro | 同上 |
-| 后端 API / 迁移 | tong-api-pro | 同上 |
-| 测试 | tong-test-pro | 同上 |
-| 代码审查 | tong-code-review-pro | 同上 |
-| 部署运维 | tong-deploy-pro | 同上（需授权） |
+## 项目自己的 skill
 
+本项目特有的做法（例如 `{{PROJECT_NAME}}-pre-push-checks`）写成 `.agents/skills/<项目名>-xxx/SKILL.md`，和 tong-* 放在一起，并在上面对应步骤里点名。`tong-*` 由 `scripts/sync-skills.sh` 管理，别直接改（重同步会覆盖），来源见 `.agents/skills/SOURCES.md`。
 
 ## 修改约束
 
@@ -46,4 +44,4 @@
 
 ## 完成交接
 
-说明改动、检查结果、缺口与下一步。提交 / 推送 / 发版仅在用户明确要求时做。
+说明改了什么、实际跑了哪些检查、失败/跳过/未运行、缺口与下一步。提交 / 推送 / 发版仅在用户明确要求时做。

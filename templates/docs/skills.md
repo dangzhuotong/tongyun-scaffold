@@ -1,43 +1,37 @@
-# 配套开发技能（Coding 套装）
+# 项目 skill
 
-脚手架只管「项目怎么起步」；真正干活的工种在 [tongyun-skills-plus](https://github.com/dangzhuotong/tongyun-skills-plus) 的 **coding** 套装。
+本项目的 agent skill 是**项目级文件**，跟代码一起提交，谁 clone 下来都能直接用。
 
-**这些是项目级 skill**：装进仓库自己的 `.cursor/skills` / `.agents/skills`，不要灌到本机 `~/.cursor/skills` 全局目录（工作机、个人全局配置分开）。
+## 目录
 
-| 任务 | 技能 | 交给它 | 期望拿回 |
-| --- | --- | --- | --- |
-| 建/改 AGENTS、工种路由 | `tong-project-pro` | 项目目标、现有文档 | 更新后的规则与检查入口 |
-| 需求、验收 | `tong-product-pro` | 用户目标、现有 R-xx | 保留编号的需求与验收 |
-| Web 界面 | `tong-ui-design-pro` | 需求编号、设计约束 | 实现与对照说明 |
-| 后端 API / 迁移 | `tong-api-pro` | 需求与数据约束 | 接口、权限、迁移 |
-| 测试验收 | `tong-test-pro` | AT 用例、环境 | 实际结果与缺陷 |
-| 代码审查 | `tong-code-review-pro` | PR / diff | 带定位的问题清单 |
-| 部署运维 | `tong-deploy-pro` | 已授权发布范围 | 健康证据 / 回滚说明 |
-
-源文件：`tongyun-skills-plus/skills/tong-*-pro/`。套装说明：`bundles/coding/README.md`。
-
-## 安装（项目内）
-
-在**已 init 或本脚手架 clone 出来的项目根目录**：
-
-```bash
-bash scripts/install-coding-skills.sh
+```text
+.agents/skills/
+  tong-project-pro/  tong-product-pro/  tong-ui-design-pro/  tong-api-pro/
+  tong-test-pro/     tong-code-review-pro/  tong-deploy-pro/     # Coding 套装（同步来的）
+  <项目名>-xxx/                                                  # 本项目自己的 skill
+  SOURCES.md                                                     # 来源仓 + commit SHA
+.claude/skills -> ../.agents/skills    # Claude Code
+.cursor/skills -> ../.agents/skills    # Cursor（Codex 直接读 .agents/skills）
+CLAUDE.md -> AGENTS.md
+.agents/notes/{proposed,implemented,rejected,archived}/        # 设计记录
 ```
 
-默认链到本仓：
+什么时候用哪个 skill，写在 [AGENTS.md](../AGENTS.md) 对应步骤里，不在这里另列一张表。
 
-- `.cursor/skills/<name>`
-- `.agents/skills/<name>`
+## 同步 Coding 套装
 
-环境变量：
+`tong-*` 来自私有仓 tongyun-skills-plus 的 `skills/`，复制成真实文件（不是软链）：
 
-- `TONGYUN_SKILLS_PLUS`：已有 skills-plus 本地路径时优先用
-- `TONGYUN_SKILLS_TARGETS`：自定义目标目录（仍建议只写项目内路径）
+```bash
+bash scripts/sync-skills.sh
+```
 
-装完后**在打开该仓库的 Agent 对话**里用 `$tong-project-pro` 等。登记 ≠ 已验证部署依赖。
+- 来源顺序：环境变量 `TONGYUN_SKILLS_PLUS`（本地路径）→ `~/.cache/tongyun-skills-plus`（`git pull --ff-only`）→ SSH clone 到该缓存。
+- 重跑即原地更新，并重写 `.agents/skills/SOURCES.md`；`tong-*` 的本地改动会被覆盖，项目自己的 skill 不受影响。
+- 只写本项目 `.agents/skills/`，不碰 `~/.cursor`、`~/.codex`、`~/.workbuddy` 等全局目录。
+- 更新后看一眼 `git diff .agents/skills` 再提交。
 
-## 和脚手架的关系
+## 注意
 
-1. `init-project.sh` → 空仓文档与 AGENTS  
-2. `install-coding-skills.sh` → **本项目**挂上 7 个开发工种  
-3. 用 `$tong-project-pro` 按任务微调本仓 `docs/skills.md` / `AGENTS.md`
+- `.agents/skills` 不能写进 `.gitignore`，它就是要提交的。
+- tong-* 来自私有、商业许可的 tongyun-skills-plus。**本项目若改成公开，这些 skill 正文也会跟着公开**；公开前先删掉 `.agents/skills/tong-*` 和 `SOURCES.md`，或确认许可允许。

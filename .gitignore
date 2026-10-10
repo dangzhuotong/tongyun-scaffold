@@ -9,3 +9,8 @@ target/
 dist/
 build/
 .venv/
+
+# 本仓是公开脚手架：不得提交 skill 正文（skills-plus 私有）
+.agents/skills/
+.claude/skills
+.cursor/skills

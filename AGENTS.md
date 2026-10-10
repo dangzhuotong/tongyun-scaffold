@@ -24,20 +24,9 @@
 - 改动前读受影响上下文的规则和实现，写清目标行为与验收方式。
 - 交接写清：改了什么、实际跑了哪些检查、失败/跳过/未运行、下一步。
 
-## 配套技能
+## 配套技能（本仓特殊约束）
 
-开发默认用 Coding 套装，清单与安装见 [docs/skills.md](docs/skills.md)。**项目级安装**（`.cursor/skills`），不要装进本机全局 skills。执行前读取该技能真实 `SKILL.md`。
-
-| 任务 | 技能 | 状态 |
-| --- | --- | --- |
-| 项目规范 / 工种路由 | tong-project-pro | `bash scripts/install-coding-skills.sh` |
-| 需求 / 验收 | tong-product-pro | 同上 |
-| Web 界面 | tong-ui-design-pro | 同上 |
-| 后端 API / 迁移 | tong-api-pro | 同上 |
-| 测试 | tong-test-pro | 同上 |
-| 代码审查 | tong-code-review-pro | 同上 |
-| 部署运维 | tong-deploy-pro | 同上（需授权） |
-
+本仓是公开脚手架，**只放脚本和模板，绝不提交 skill 正文**（tongyun-skills-plus 私有、商业许可）。skill 由 `scripts/init-project.sh` → `scripts/sync-skills.sh` 复制进**新项目**的 `.agents/skills/`。生成项目的规则模板见 [templates/AGENTS.md](templates/AGENTS.md)，说明见 [docs/skills.md](docs/skills.md)。改脚本后跑 `bash scripts/selftest.sh`。
 
 ## 修改约束
 
