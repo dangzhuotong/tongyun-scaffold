@@ -52,4 +52,4 @@ for dest in "${TARGETS[@]}"; do
   done
 done
 
-echo "ok. 项目级 skills 已就位（源：$SRC）。在打开本仓库的 Agent 会话里可用；不要装进本机全局 skills。"
+echo "ok. 项目级 skills 已就位（源：${SRC}）。在打开本仓库的 Agent 会话里可用；不要装进本机全局 skills。"

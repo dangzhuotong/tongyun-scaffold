@@ -26,7 +26,7 @@ render_file() {
   local src="$1"
   local dst="$2"
   if [[ -e "$dst" && "$FORCE" != "1" ]]; then
-    echo "跳过 $dst（已存在）"
+    echo "跳过 ${dst}（已存在）"
     return 0
   fi
   sed -e "s/{{PROJECT_NAME}}/$ESC_NAME/g" -e "s/{{PROJECT_PURPOSE}}/$ESC_PURPOSE/g" "$src" > "$dst"
@@ -36,7 +36,7 @@ copy_file() {
   local src="$1"
   local dst="$2"
   if [[ -e "$dst" && "$FORCE" != "1" ]]; then
-    echo "跳过 $dst（已存在）"
+    echo "跳过 ${dst}（已存在）"
     return 0
   fi
   cp "$src" "$dst"

@@ -135,7 +135,7 @@ COUNT_CURSOR="$(grep -cxF ".cursor/skills/" "$TMP_DIR2/.gitignore")"
 COUNT_AGENTS="$(grep -cxF ".agents/skills/" "$TMP_DIR2/.gitignore")"
 
 if [[ "$COUNT_CURSOR" -ne 1 || "$COUNT_AGENTS" -ne 1 ]]; then
-  echo "断言失败：.gitignore 中出现重复规则（cursor=$COUNT_CURSOR, agents=$COUNT_AGENTS）" >&2
+  echo "断言失败：.gitignore 中出现重复规则（cursor=$COUNT_CURSOR, agents=${COUNT_AGENTS}）" >&2
   exit 1
 fi
 
