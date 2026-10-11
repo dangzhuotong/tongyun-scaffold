@@ -18,18 +18,18 @@
 | 测试 | [docs/testing/acceptance-tests.md](docs/testing/acceptance-tests.md) |
 | 长期决定 | [docs/decisions/](docs/decisions/)；设计取舍记 [.agents/notes/](.agents/notes/README.md) |
 
-项目 skill 都在 `.agents/skills/`（随仓库提交，`.claude/skills`、`.cursor/skills` 指向同一份）。用到哪个，先读它的 `SKILL.md` 再动手。
+项目 skill 都在 `.agents/skills/`（随仓库提交，`.claude/skills`、`.cursor/skills` 指向同一份）。用到哪个，先读它的 `SKILL.md` 再动手。当前用的是开源 lite 版还是商业 pro 版，看 `.agents/skills/SOURCES.md`；切版本用 `scripts/sync-skills.sh --edition`，下面的链接会跟着改。
 
 ## 开发流程
 
-1. **改规则 / 文档结构 / 加工种**：按 [tong-project-pro](.agents/skills/tong-project-pro/SKILL.md) 改本文件和 `docs/`。
-2. **需求、验收**：按 [tong-product-pro](.agents/skills/tong-product-pro/SKILL.md) 写进 [docs/prd.md](docs/prd.md)，保留 R-xx / AT-xx 编号。
+1. **改规则 / 文档结构 / 加工种**：按 [tong-project](.agents/skills/tong-project/SKILL.md) 改本文件和 `docs/`。
+2. **需求、验收**：按 [tong-product](.agents/skills/tong-product/SKILL.md) 写进 [docs/prd.md](docs/prd.md)，保留 R-xx / AT-xx 编号。
 3. **实现**：
-   - Web 界面按 [tong-ui-design-pro](.agents/skills/tong-ui-design-pro/SKILL.md)；
-   - 后端接口、数据、迁移按 [tong-api-pro](.agents/skills/tong-api-pro/SKILL.md)。
+   - Web 界面按 [tong-ui-design](.agents/skills/tong-ui-design/SKILL.md)；
+   - 后端接口、数据、迁移按 [tong-api](.agents/skills/tong-api/SKILL.md)。
    改动前读受影响上下文的规则和实现，写清目标行为与验收方式。
-4. **推送前**：按 [tong-test-pro](.agents/skills/tong-test-pro/SKILL.md) 跑验收并如实记录结果，再按 [tong-code-review-pro](.agents/skills/tong-code-review-pro/SKILL.md) 审一遍 diff。只报实际跑过的命令。
-5. **部署**：只在用户明确授权范围内，按 [tong-deploy-pro](.agents/skills/tong-deploy-pro/SKILL.md) 执行，留健康证据和回滚说明。
+4. **推送前**：按 [tong-test](.agents/skills/tong-test/SKILL.md) 跑验收并如实记录结果，再按 [tong-code-review](.agents/skills/tong-code-review/SKILL.md) 审一遍 diff。只报实际跑过的命令。
+5. **部署**：只在用户明确授权范围内，按 [tong-deploy](.agents/skills/tong-deploy/SKILL.md) 执行，留健康证据和回滚说明。
 
 命令表只在 [docs/development.md](docs/development.md) 维护。未建立的入口标「未建立」，**不要声称跑过不存在的命令**。
 

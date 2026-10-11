@@ -2,7 +2,7 @@
 
 Tong 系列**新项目初始化脚手架**（公开）。新开一个软件仓时，用它带上 AI 协作规则、轻量 DDD 目录约定和文档骨架，而不是把所有东西堆进 skills 仓。
 
-- 技能包仍放在 [tongyun-skills-plus](https://github.com/dangzhuotong/tongyun-skills-plus)（可安装的工种）
+- 技能包放在单独的仓：开源 lite 版（MIT，仓名待定）和商业 pro 版 tongyun-skills-plus（私有）
 - 本仓只负责：**项目怎么起步、Agent 先读什么、领域边界怎么画**
 
 ## 一分钟初始化
@@ -15,7 +15,7 @@ cd ~/code/my-app && git init && git add -A && git commit -m "init from tongyun-s
 
 `bash scripts/selftest.sh` 自检。
 
-`init-project.sh` 会写入：`AGENTS.md`（`CLAUDE.md` 软链到它）、`docs/*` 骨架、`.agents/notes/`、`.agents/skills/`（Coding 套装 7 个 skill 的真实文件）、`.claude/skills` / `.cursor/skills` 软链、`scripts/sync-skills.sh`、`.gitignore` 建议项；**不会**替你选技术栈或装依赖。不要初始化到脚手架目录本身。
+`init-project.sh` 会写入：`AGENTS.md`（`CLAUDE.md` 软链到它）、`docs/*` 骨架、`.agents/notes/`、`.agents/skills/`（Coding 套装 7 个 skill 的真实文件，默认开源 lite 版）、`.claude/skills` / `.cursor/skills` 软链、`scripts/sync-skills.sh`、`.gitignore` 建议项；**不会**替你选技术栈或装依赖。不要初始化到脚手架目录本身。
 
 ## 轻量 DDD（给 Agent 用）
 
@@ -32,16 +32,19 @@ cd ~/code/my-app && git init && git add -A && git commit -m "init from tongyun-s
 
 照 [deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) 的做法：skill 是**项目文件**，放 `.agents/skills/<名字>/SKILL.md` 随项目提交，`AGENTS.md` 在对应步骤里点名。详见 [docs/skills.md](docs/skills.md)。
 
-- init 时把 tongyun-skills-plus 的 Coding 套装（project / product / ui-design / api / test / code-review / deploy）**复制**进新项目，来源 commit 记在 `.agents/skills/SOURCES.md`。
-- 本仓是公开的，**只放脚本，不放 skill 正文**（skills-plus 私有、商业许可）。
-- 拿不到 skills-plus（没 SSH 权限 / 离线）时 init 照常完成并给出警告，之后在项目里补跑：
+- init 时把 Coding 套装 7 个工种（project / product / ui-design / api / test / code-review / deploy）**复制**进新项目，来源 commit 记在 `.agents/skills/SOURCES.md`。
+- 两个版本可选：**lite**（默认，开源 MIT 精简版 `tong-xxx`，不需要任何权限）和 **pro**（商业完整版 `tong-xxx-pro`，来自私有 tongyun-skills-plus）。
 
 ```bash
-bash scripts/sync-skills.sh   # 重跑即原地更新
+bash scripts/init-project.sh <名> <用途> <目录>                  # 默认 lite
+bash scripts/init-project.sh --edition pro <名> <用途> <目录>    # 用 pro（需私有仓权限）
+bash scripts/sync-skills.sh --edition lite                       # 在项目里切换 / 重跑即原地更新
 ```
 
+- 本仓是公开的，**只放脚本，不放任何版本的 skill 正文**。
+- 拿不到来源仓（离线 / 没权限）时 init 照常完成并给出警告，之后在项目里补跑 `bash scripts/sync-skills.sh`。
 - 不装进本机全局 `~/.cursor/skills` 等目录。
-- ⚠️ init 出来的项目如果公开，里面的 tong-* skill 也会跟着公开。
+- ⚠️ 用 pro 版的项目如果公开，里面的 tong-*-pro 也会跟着公开；公开前先切回 lite。
 
 ## 许可
 
