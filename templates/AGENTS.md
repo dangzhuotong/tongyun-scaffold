@@ -15,6 +15,7 @@
 | 模块边界 | [docs/architecture.md](docs/architecture.md) |
 | 命令、CI | [docs/development.md](docs/development.md) |
 | 主流程 | [docs/user-flows.md](docs/user-flows.md) |
+| 界面改动 | [DESIGN.md](DESIGN.md) 定值，[docs/design/ui-guard.md](docs/design/ui-guard.md) 自查 |
 | 测试 | [docs/testing/acceptance-tests.md](docs/testing/acceptance-tests.md) |
 | 长期决定 | [docs/decisions/](docs/decisions/)；设计取舍记 [.agents/notes/](.agents/notes/README.md) |
 
