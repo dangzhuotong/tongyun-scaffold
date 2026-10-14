@@ -38,7 +38,7 @@ check_agents_links() { # $1=项目目录 $2=应出现的 skill 列表
   done
 }
 
-echo "=== [0/10] 本仓不含 skill 正文 ==="
+echo "=== [0/12] 本仓不含 skill 正文 ==="
 if git -C "$ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   if git -C "$ROOT" ls-files | grep -q 'SKILL\.md$'; then
     git -C "$ROOT" ls-files | grep 'SKILL\.md$' >&2
@@ -69,7 +69,7 @@ LITE_SHA="$(git -C "$FAKE_LITE" rev-parse HEAD)"
 export TONGYUN_SKILLS_PLUS="$FAKE"
 export TONGYUN_SKILLS_LITE="$FAKE_LITE"
 
-echo "=== [1/10] 初始生成（默认 lite）、特殊字符、skill 复制 ==="
+echo "=== [1/12] 初始生成（默认 lite）、特殊字符、skill 复制 ==="
 TEST_NAME="smoke/demo & test\\1 | pipe"
 TEST_PURPOSE="测试 & 用途|x \\backslash /slash"
 
@@ -122,7 +122,7 @@ if command -v git >/dev/null 2>&1; then
   done
 fi
 
-echo "=== [2/10] 二次运行不覆盖已改动的文件，skill 原地刷新 ==="
+echo "=== [2/12] 二次运行不覆盖已改动的文件，skill 原地刷新 ==="
 echo "MODIFIED_BY_TEST" > "$TMP_DIR/AGENTS.md"
 echo "local edit" >> "$TMP_DIR/.agents/skills/tong-api/SKILL.md"
 mkdir -p "$TMP_DIR/.agents/skills/demo-pre-push-checks"
@@ -134,12 +134,12 @@ grep -Fq "跳过" <<< "$SKIP_OUTPUT" || fail "二次运行未提示跳过"
 ! grep -Fq "local edit" "$TMP_DIR/.agents/skills/tong-api/SKILL.md" || fail "tong-* 未被刷新"
 [[ -f "$TMP_DIR/.agents/skills/demo-pre-push-checks/SKILL.md" ]] || fail "项目自有 skill 被删了"
 
-echo "=== [3/10] FORCE=1 覆盖 ==="
+echo "=== [3/12] FORCE=1 覆盖 ==="
 FORCE=1 bash "$INIT_SH" "$TEST_NAME" "$TEST_PURPOSE" "$TMP_DIR"
 grep -Fq -- "$TEST_PURPOSE" "$TMP_DIR/AGENTS.md" || fail "FORCE=1 未覆盖 AGENTS.md"
 check_agents_links "$TMP_DIR" "$LITE_SKILLS"
 
-echo "=== [4/10] lite → pro 切换，再切回 lite ==="
+echo "=== [4/12] lite → pro 切换，再切回 lite ==="
 bash "$TMP_DIR/scripts/sync-skills.sh" --edition pro "$TMP_DIR"
 for name in $PRO_SKILLS; do
   [[ -f "$TMP_DIR/.agents/skills/$name/SKILL.md" ]] || fail "切 pro 后缺 $name"
@@ -165,7 +165,7 @@ check_agents_links "$TMP_DIR" "$LITE_SKILLS"
 # 非法版本
 if bash "$TMP_DIR/scripts/sync-skills.sh" --edition gold "$TMP_DIR" >/dev/null 2>&1; then fail "接受了非法版本"; fi
 
-echo "=== [5/10] init --edition pro ==="
+echo "=== [5/12] init --edition pro ==="
 bash "$INIT_SH" --edition pro "demo4" "purpose4" "$TMP_DIR4"
 for name in $PRO_SKILLS; do
   [[ -f "$TMP_DIR4/.agents/skills/$name/SKILL.md" ]] || fail "init pro 缺 $name"
@@ -173,13 +173,13 @@ done
 check_agents_links "$TMP_DIR4" "$PRO_SKILLS"
 if bash "$INIT_SH" --edition gold x y "$WORK/p5" >/dev/null 2>&1; then fail "init 接受了非法版本"; fi
 
-echo "=== [6/10] 旧 .gitignore 里的 skills 忽略规则被移除，自定义规则保留 ==="
+echo "=== [6/12] 旧 .gitignore 里的 skills 忽略规则被移除，自定义规则保留 ==="
 printf 'existing_custom_rule\n.cursor/skills/\n.agents/skills/\n' > "$TMP_DIR2/.gitignore"
 bash "$INIT_SH" "demo2" "purpose2" "$TMP_DIR2"
 grep -qxF "existing_custom_rule" "$TMP_DIR2/.gitignore" || fail "自定义规则丢失"
 grep -qE '^\.(agents|cursor|claude)/skills/?$' "$TMP_DIR2/.gitignore" && fail "旧 skills 忽略规则未移除"
 
-echo "=== [7/10] 拿不到来源仓时 init 仍成功并警告（lite / pro） ==="
+echo "=== [7/12] 拿不到来源仓时 init 仍成功并警告（lite / pro） ==="
 OUT="$(TONGYUN_SKILLS_LITE='' TONGYUN_SKILLS_LITE_CACHE="$WORK/nocache-lite" TONGYUN_SKILLS_LITE_GIT="$WORK/nonexistent" \
   bash "$INIT_SH" "demo3" "purpose3" "$TMP_DIR3" 2>&1)" || fail "lite 仓不可达时 init 失败了"
 printf "%s\n" "$OUT"
@@ -193,15 +193,21 @@ grep -Fq "edition pro" <<< "$OUT" || fail "pro 降级未提示 --edition pro"
 check_agents_links_names_only() { grep -Fq "](.agents/skills/tong-api-pro/SKILL.md)" "$1/AGENTS.md"; }
 check_agents_links_names_only "$WORK/p3b" || fail "pro 同步失败时 AGENTS.md 没写 pro 名字"
 
-echo "=== [8/10] 拒绝对脚手架仓本身同步 / 初始化 ==="
+echo "=== [8/12] 拒绝对脚手架仓本身同步 / 初始化 ==="
 if bash "$ROOT/scripts/sync-skills.sh" "$ROOT" >/dev/null 2>&1; then fail "sync-skills 对脚手架本身执行了"; fi
 if bash "$ROOT/scripts/sync-skills.sh" --edition pro "$ROOT" >/dev/null 2>&1; then fail "sync-skills pro 对脚手架本身执行了"; fi
 if bash "$INIT_SH" x y "$ROOT" >/dev/null 2>&1; then fail "init 允许初始化到脚手架本身"; fi
 
-echo "=== [9/10] 未写全局目录 ==="
+echo "=== [9/12] 未写全局目录 ==="
 [[ ! -e "$HOME/.cursor" && ! -e "$HOME/.codex" && ! -e "$HOME/.workbuddy" ]] || fail "写到了全局目录"
 
-echo "=== [10/10] 本仓仍不含 skill 正文 ==="
+echo "=== [10/12] init-project 专项测试（tests/test_init_project.sh） ==="
+bash "$ROOT/tests/test_init_project.sh"
+
+echo "=== [11/12] sync-skills 专项测试（tests/test_sync_skills.sh） ==="
+bash "$ROOT/tests/test_sync_skills.sh"
+
+echo "=== [12/12] 本仓仍不含 skill 正文 ==="
 [[ ! -e "$ROOT/.agents/skills/tong-project" && ! -e "$ROOT/.agents/skills/tong-project-pro" ]] || fail "脚手架目录里出现了 skill"
 
 echo "selftest ok"
