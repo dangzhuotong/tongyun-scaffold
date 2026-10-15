@@ -8,14 +8,27 @@ Tong 系列**新项目初始化脚手架**（公开）。新开一个软件仓�
 ## 一分钟初始化
 
 ```bash
-git clone https://github.com/dangzhuotong/tongyun-scaffold.git ~/tongyun-scaffold
-bash ~/tongyun-scaffold/scripts/init-project.sh "my-app" "一句话说明这个项目做什么" ~/code/my-app
-cd ~/code/my-app && git init && git add -A && git commit -m "init from tongyun-scaffold"
+# 1. 克隆脚手架
+git clone https://github.com/example-org/tongyun-scaffold.git ~/tongyun-scaffold
+
+# 2. 初始化新项目（参数：<项目名> <用途说明> <目标目录>）
+bash ~/tongyun-scaffold/scripts/init-project.sh "fictional-app" "虚构示例系统" ~/projects/fictional-app
+
+# 3. 进入新项目并建立版本库
+cd ~/projects/fictional-app
+git init && git add -A && git commit -m "init from tongyun-scaffold"
 ```
 
-`bash scripts/selftest.sh` 自检。
+初始化脚本会在目标目录生成完整项目骨架：
+- **协作规范**：`AGENTS.md`（`CLAUDE.md` 软链至此）与 `.agents/skills/`（预置 7 个开发 skill，软链至 `.claude/skills`、`.cursor/skills`）。
+- **文档骨架**：`docs/` 结构（需求 PRD、轻量 DDD 架构、命令表与 `docs/design/ui-guard.md` 界面守则清单）。
+- **设计决策笔记**：`.agents/notes/`（按 `proposed`、`implemented`、`rejected`、`archived` 分类管理）。
+- **同步工具**：`scripts/sync-skills.sh` 与基础 `.gitignore`。
 
-`init-project.sh` 会写入：`AGENTS.md`（`CLAUDE.md` 软链到它）、`docs/*` 骨架（含界面守则清单 `docs/design/ui-guard.md`）、`.agents/notes/`（proposed / implemented / rejected / archived）、`.agents/skills/`（Coding 套装 7 个 skill 的真实文件，默认开源 lite 版）、`.claude/skills` / `.cursor/skills` 软链、`scripts/sync-skills.sh`、`.gitignore` 建议项；**不会**替你选技术栈或装依赖。不要初始化到脚手架目录本身。
+> **说明**：
+> - 脚本仅创建结构规范，不绑定技术栈或安装运行时依赖。
+> - 请勿将脚手架仓库自身作为目标目录。
+> - 在脚手架根目录可运行 `bash scripts/selftest.sh` 进行模板完整性自检。
 
 ## 轻量 DDD（给 Agent 用）
 
