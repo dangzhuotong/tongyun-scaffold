@@ -100,6 +100,7 @@ copy_file "$TPL/docs/user-flows.md" "$TARGET/docs/user-flows.md"
 copy_file "$TPL/docs/skills.md" "$TARGET/docs/skills.md"
 copy_file "$TPL/docs/testing/acceptance-tests.md" "$TARGET/docs/testing/acceptance-tests.md"
 copy_file "$TPL/docs/design/README.md" "$TARGET/docs/design/README.md"
+copy_file "$TPL/docs/design/ui-guard.md" "$TARGET/docs/design/ui-guard.md"
 copy_file "$TPL/.agents/notes/README.md" "$TARGET/.agents/notes/README.md"
 
 for file in "$TPL/docs/decisions/"*; do

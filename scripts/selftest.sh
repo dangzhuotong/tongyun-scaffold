@@ -76,7 +76,7 @@ TEST_PURPOSE="测试 & 用途|x \\backslash /slash"
 bash "$INIT_SH" "$TEST_NAME" "$TEST_PURPOSE" "$TMP_DIR"
 
 for file in AGENTS.md docs/prd.md docs/plan.md docs/architecture.md docs/development.md docs/user-flows.md \
-  docs/skills.md docs/testing/acceptance-tests.md docs/decisions/0001-lightweight-ddd.md docs/design/README.md \
+  docs/skills.md docs/testing/acceptance-tests.md docs/decisions/0001-lightweight-ddd.md docs/design/README.md docs/design/ui-guard.md \
   .agents/notes/README.md scripts/sync-skills.sh .gitignore .agents/skills/SOURCES.md; do
   [[ -f "$TMP_DIR/$file" ]] || fail "缺少 $file"
 done
@@ -84,6 +84,9 @@ done
 for state in proposed implemented rejected archived; do
   [[ -f "$TMP_DIR/.agents/notes/$state/.gitkeep" ]] || fail "缺少 .agents/notes/$state/.gitkeep"
 done
+grep -Fq "](docs/design/ui-guard.md)" "$TMP_DIR/AGENTS.md" || fail "AGENTS.md 没指向 ui-guard.md"
+grep -Fq "](.agents/notes/README.md)" "$TMP_DIR/AGENTS.md" || fail "AGENTS.md 没指向 .agents/notes"
+grep -Fq "DESIGN.md" "$TMP_DIR/docs/design/ui-guard.md" || fail "ui-guard.md 没引用 DESIGN.md"
 for name in $LITE_SKILLS; do
   f="$TMP_DIR/.agents/skills/$name/SKILL.md"
   [[ -f "$f" && ! -L "$f" && ! -L "$TMP_DIR/.agents/skills/$name" ]] || fail "$name 不是真实文件"

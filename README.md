@@ -15,7 +15,7 @@ cd ~/code/my-app && git init && git add -A && git commit -m "init from tongyun-s
 
 `bash scripts/selftest.sh` 自检。
 
-`init-project.sh` 会写入：`AGENTS.md`（`CLAUDE.md` 软链到它）、`docs/*` 骨架、`.agents/notes/`、`.agents/skills/`（Coding 套装 7 个 skill 的真实文件，默认开源 lite 版）、`.claude/skills` / `.cursor/skills` 软链、`scripts/sync-skills.sh`、`.gitignore` 建议项；**不会**替你选技术栈或装依赖。不要初始化到脚手架目录本身。
+`init-project.sh` 会写入：`AGENTS.md`（`CLAUDE.md` 软链到它）、`docs/*` 骨架（含界面守则清单 `docs/design/ui-guard.md`）、`.agents/notes/`（proposed / implemented / rejected / archived）、`.agents/skills/`（Coding 套装 7 个 skill 的真实文件，默认开源 lite 版）、`.claude/skills` / `.cursor/skills` 软链、`scripts/sync-skills.sh`、`.gitignore` 建议项；**不会**替你选技术栈或装依赖。不要初始化到脚手架目录本身。
 
 ## 轻量 DDD（给 Agent 用）
 
@@ -49,3 +49,5 @@ bash scripts/sync-skills.sh --edition lite                       # 在项目里�
 ## 许可
 
 MIT。欢迎 fork；不要把真实密钥、客户数据写进模板。
+
+界面守则清单与 `.agents/notes/` 按状态分目录的做法，思路参考 [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)（MIT），按通用项目重写。
