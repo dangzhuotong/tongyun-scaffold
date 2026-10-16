@@ -5,6 +5,8 @@ Tong 系列**新项目初始化脚手架**（公开）。新开一个软件仓�
 - 技能包放在单独的仓：开源 lite 版（MIT，仓名待定）和商业 pro 版 tongyun-skills-plus（私有）
 - 本仓只负责：**项目怎么起步、Agent 先读什么、领域边界怎么画**
 
+官方主标（云芽）见 [brand/](brand/README.md)。
+
 ## 一分钟初始化
 
 ```bash
