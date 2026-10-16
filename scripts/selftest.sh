@@ -210,6 +210,18 @@ bash "$ROOT/tests/test_init_project.sh"
 echo "=== [11/12] sync-skills 专项测试（tests/test_sync_skills.sh） ==="
 bash "$ROOT/tests/test_sync_skills.sh"
 
+echo "=== [12b/12] 脚手架模板文件与 AGENTS 标记存在 ==="
+for tmpl in templates/AGENTS.md templates/docs/prd.md templates/docs/plan.md templates/docs/architecture.md \
+  templates/docs/development.md templates/docs/user-flows.md templates/docs/skills.md \
+  templates/docs/testing/acceptance-tests.md templates/docs/decisions/0001-lightweight-ddd.md \
+  templates/docs/design/README.md templates/docs/design/ui-guard.md \
+  templates/.agents/notes/README.md scripts/sync-skills.sh scripts/init-project.sh; do
+  [[ -f "$ROOT/$tmpl" ]] || fail "缺少模板：$tmpl"
+done
+grep -Fq "agent" "$ROOT/templates/AGENTS.md" || fail "templates/AGENTS.md 缺少 agent 标记"
+grep -Fq "docs/prd.md" "$ROOT/templates/AGENTS.md" || fail "templates/AGENTS.md 未引用 docs/prd.md"
+grep -Fq "docs/design/ui-guard.md" "$ROOT/templates/AGENTS.md" || fail "templates/AGENTS.md 未引用 ui-guard.md"
+
 echo "=== [12/12] 本仓仍不含 skill 正文 ==="
 [[ ! -e "$ROOT/.agents/skills/tong-project" && ! -e "$ROOT/.agents/skills/tong-project-pro" ]] || fail "脚手架目录里出现了 skill"
 
