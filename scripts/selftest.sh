@@ -213,4 +213,16 @@ bash "$ROOT/tests/test_sync_skills.sh"
 echo "=== [12/12] 本仓仍不含 skill 正文 ==="
 [[ ! -e "$ROOT/.agents/skills/tong-project" && ! -e "$ROOT/.agents/skills/tong-project-pro" ]] || fail "脚手架目录里出现了 skill"
 
+echo "=== 附加负例：AGENTS.md 指向缺失 skill 的链接会被 check_agents_links 拒绝 ==="
+BADLINK_DIR="$WORK/badlink"
+mkdir -p "$BADLINK_DIR/.agents/skills/tong-project"
+: > "$BADLINK_DIR/.agents/skills/tong-project/SKILL.md"
+{
+  printf -- '- [tong-project](.agents/skills/tong-project/SKILL.md)\n'
+  printf -- '- [ghost](.agents/skills/ghost-skill/SKILL.md)\n'
+} > "$BADLINK_DIR/AGENTS.md"
+if (check_agents_links "$BADLINK_DIR" "tong-project") >/dev/null 2>&1; then
+  fail "check_agents_links 未发现指向缺失 skill 的链接"
+fi
+
 echo "selftest ok"
