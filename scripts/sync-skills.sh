@@ -121,7 +121,7 @@ fi
 
 for name in $SKILLS; do
   if [[ ! -f "$SRC/skills/$name/SKILL.md" ]]; then
-    warn "源里缺 $SRC/skills/$name/SKILL.md（版本 $EDITION）"
+    warn "源里缺 $SRC/skills/$name/SKILL.md（版本 ${EDITION}）"
     exit 1
   fi
 done
