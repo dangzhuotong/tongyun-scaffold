@@ -239,4 +239,46 @@ if (check_agents_links "$BADLINK_DIR" "tong-project") >/dev/null 2>&1; then
   fail "check_agents_links 未发现指向缺失 skill 的链接"
 fi
 
+echo "=== [13/13] macOS bash 3.2 回归护栏：变量引用后紧跟多字节字符必须加花括号 ==="
+# 背景（#7）：bash 3.2（macOS /bin/bash）在 C 区域下会把紧跟变量的多字节字符并入
+# 变量名，于是「变量名 + 全角右括号」被当成未定义变量，set -u 直接退出，警告从未打印。
+# 这里静态扫描生产脚本，禁止未加花括号的 $VAR / $1 后紧跟非 ASCII 字节，防止同类回归。
+if LC_ALL=C grep -nE '\$([A-Za-z_][A-Za-z0-9_]*|[0-9]+)[^ -~]' "$ROOT/scripts/"*.sh; then
+  fail "scripts/ 里出现 \$VAR 紧跟多字节字符（macOS bash 3.2 会误并入变量名，请改成 \${VAR}）"
+fi
+
+echo "=== [14/13] 源里缺 SKILL.md（C 区域）lite / pro 都打印警告并以 1 退出 ==="
+BADLITE_SRC="$WORK/badsrc-lite"
+mkdir -p "$BADLITE_SRC/skills"
+for name in $LITE_SKILLS; do
+  mkdir -p "$BADLITE_SRC/skills/$name"
+  printf -- '---\nname: %s\n---\n' "$name" > "$BADLITE_SRC/skills/$name/SKILL.md"
+done
+rm -f "$BADLITE_SRC/skills/tong-api/SKILL.md"
+BADPRO_SRC="$WORK/badsrc-pro"
+mkdir -p "$BADPRO_SRC/skills"
+for name in $PRO_SKILLS; do
+  mkdir -p "$BADPRO_SRC/skills/$name"
+  printf -- '---\nname: %s\n---\n' "$name" > "$BADPRO_SRC/skills/$name/SKILL.md"
+done
+rm -f "$BADPRO_SRC/skills/tong-api-pro/SKILL.md"
+PROJ_BAD="$WORK/proj-bad"
+mkdir -p "$PROJ_BAD"
+
+status=0
+OUT="$(LC_ALL=C TONGYUN_SKILLS_LITE="$BADLITE_SRC" bash "$ROOT/scripts/sync-skills.sh" "$PROJ_BAD" 2>&1)" || status=$?
+printf "%s\n" "$OUT"
+[[ "$status" -eq 1 ]] || fail "lite 源缺 SKILL.md 退出码应为 1，实际 $status"
+grep -Fq "源里缺" <<< "$OUT" || fail "lite 源缺 SKILL.md 未打印警告（#7 回归）"
+grep -Fq "版本 lite" <<< "$OUT" || fail "lite 源缺 SKILL.md 的警告未带版本号"
+[[ ! -e "$PROJ_BAD/.agents/skills" ]] || fail "源缺 SKILL.md 时不应写入目标项目"
+
+status=0
+OUT="$(LC_ALL=C TONGYUN_SKILLS_PLUS="$BADPRO_SRC" bash "$ROOT/scripts/sync-skills.sh" --edition pro "$PROJ_BAD" 2>&1)" || status=$?
+printf "%s\n" "$OUT"
+[[ "$status" -eq 1 ]] || fail "pro 源缺 SKILL.md 退出码应为 1，实际 $status"
+grep -Fq "源里缺" <<< "$OUT" || fail "pro 源缺 SKILL.md 未打印警告"
+grep -Fq "版本 pro" <<< "$OUT" || fail "pro 源缺 SKILL.md 的警告未带版本号"
+[[ ! -e "$PROJ_BAD/.agents/skills" ]] || fail "源缺 SKILL.md 时不应写入目标项目"
+
 echo "selftest ok"
