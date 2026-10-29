@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="tongyun-scaffold 体检交付：shellcheck 清零、README 初始化纳入 CI 烟测、文档修正与真实验证记录。">
+<meta name="color-scheme" content="light">
+<title>骨架先健康 · tongyun-scaffold 体检交付</title>
+<style>
+:root{--bg:#f6f5f2;--paper:#fff;--text:#21272b;--muted:#6d777c;--line:#e9e8e3;--accent:#0c787b;--accent-soft:#e7f5f2;--heading:#112b32;--card:#f6faf9;--shadow:0 15px 50px rgba(11,48,50,.045)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.84 -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;letter-spacing:.012em}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+button{font:inherit;cursor:pointer}
+.layout{display:grid;grid-template-columns:250px minmax(0,830px);gap:48px;max-width:1270px;margin:auto;padding:0 32px 90px}
+.sidebar{position:sticky;top:0;align-self:start;height:100vh;padding:45px 0 24px;overflow:auto}
+.brand-mark{font-size:21px;font-weight:800;color:var(--heading)}.brand-mark b{color:var(--accent)}
+.sidebar small{font-size:11px;letter-spacing:.16em;color:var(--accent);font-weight:800}
+.motto{font-size:12px;color:var(--muted);margin-top:3px}
+.divider{height:1px;background:var(--line);margin:26px 0 21px}
+.toc-title{font-size:11px;letter-spacing:.16em;color:var(--muted);font-weight:800;margin-bottom:13px}
+.toc{display:flex;flex-direction:column;gap:3px}
+.toc a{display:flex;align-items:flex-start;gap:12px;padding:8px 10px 8px 0;font-size:12px;line-height:1.45;color:#59696d;border-radius:6px}
+.toc a:hover{color:var(--accent)}
+.toc span{font-variant-numeric:tabular-nums;color:#9ba9a9;font-size:10px;line-height:18px}
+.side-bottom{margin-top:25px}
+.side-bottom button{border:1px solid #d9e2df;border-radius:9px;padding:8px 12px;background:#fff;font-size:12px;color:#455e60}
+.main{min-width:0;padding-top:32px}
+.hero{background:linear-gradient(135deg,#123c43,#0e272d 75%);border-radius:22px;min-height:360px;padding:50px 54px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.hero:after{content:'橦';position:absolute;right:-8px;bottom:-130px;font-family:serif;font-size:330px;font-weight:900;color:rgba(255,255,255,.035);pointer-events:none}
+.eyebrow{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.21em;color:#8ed7cc}
+.hero h1{font-size:clamp(32px,4.6vw,50px);letter-spacing:-.045em;line-height:1.22;margin:34px 0 16px;font-weight:800;max-width:620px}
+.hero .tagline{font-size:18px;color:#d3eee7}
+.hero .sub{font-size:14px;max-width:560px;color:#bfd7d6;line-height:1.9;margin-top:24px}
+.hero-meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:26px}
+.hero-meta span{border:1px solid rgba(255,255,255,.17);background:rgba(255,255,255,.06);font-size:11px;padding:5px 11px;border-radius:100px;color:#d7eae8}
+.intro{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 32px}
+.intro>div{padding:19px;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+.intro strong{font-size:12px;display:block;color:var(--accent);margin-bottom:7px}
+.intro span{font-size:13px;line-height:1.65;color:#506067}
+.doc-section{margin:0 0 25px;padding:40px 40px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);scroll-margin-top:25px}
+.section-eyebrow{font-size:10px;font-weight:800;letter-spacing:.23em;color:var(--accent);margin-bottom:12px}
+.doc-section h2{margin:0 0 18px;color:var(--heading);font-size:27px;letter-spacing:-.03em;line-height:1.4}
+.doc-section h3{font-size:16px;color:var(--heading);margin:26px 0 10px}
+.doc-section p,.doc-section li{font-size:14px;color:#465359;line-height:1.9}
+.doc-section ul,.doc-section ol{padding-left:1.4em}
+blockquote{margin:18px 0;padding:18px 22px;border-left:3px solid #1b9694;background:var(--card);color:#244d50;font-size:14px;line-height:1.9;border-radius:0 12px 12px 0}
+.table-wrap{width:100%;overflow-x:auto;margin:18px 0 10px;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:12px;line-height:1.75;min-width:460px}
+th{text-align:left;background:#f0f7f5;color:#206d68;font-size:11px}
+th,td{padding:11px 12px;vertical-align:top;border-bottom:1px solid #edf0ed}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:650;color:#24393f}
+tbody tr:nth-child(even){background:#fcfdfc}
+code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;background:#f2f5f3;border-radius:4px;padding:1px 5px;color:#285a58;word-break:break-all}
+pre{margin:14px 0;padding:16px 18px;background:#10282c;color:#d8e9e5;border-radius:12px;overflow-x:auto;font:12px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace}
+.footer{text-align:center;color:#8a9999;font-size:12px;padding:3px 0 24px}
+@media(max-width:950px){.layout{display:block;padding:0 18px 50px}.sidebar{height:auto;position:static;padding:20px 0 14px}.sidebar .divider,.sidebar .toc-title,.sidebar .toc{display:none}.sidebar .side-bottom{margin:12px 0 0}.main{padding-top:0}.hero{padding:38px 26px;min-height:320px}.doc-section{padding:28px 24px}}
+@media(max-width:560px){.hero h1{font-size:32px}.intro{grid-template-columns:1fr;gap:8px}.doc-section{padding:24px 18px;border-radius:13px}.doc-section h2{font-size:22px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white}.layout{display:block;padding:0;max-width:none}.sidebar{display:none}.main{padding:0}.hero{box-shadow:none;border-radius:0;min-height:0}.doc-section{box-shadow:none;border:0;border-radius:0;border-bottom:1px solid #ddd;padding:24px 12px;margin:0}.footer{display:none}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" aria-label="文档导航">
+    <div class="brand-mark">橦云 Tongyun<b>.</b></div>
+    <small>TONGYUN DOCUMENT</small>
+    <div class="motto">卓然而立，橦木自安</div>
+    <div class="divider"></div>
+    <div class="toc-title">Contents / 目录</div>
+    <nav class="toc" aria-label="章节目录">
+      <a href="#section-01"><span>01</span>执行摘要</a>
+      <a href="#section-02"><span>02</span>改动清单</a>
+      <a href="#section-03"><span>03</span>验证与证据</a>
+      <a href="#section-04"><span>04</span>限制与风险</a>
+      <a href="#section-05"><span>05</span>交付信息</a>
+    </nav>
+    <div class="side-bottom"><button type="button" onclick="window.print()">打印 / 保存 PDF</button></div>
+  </aside>
+  <main class="main" id="content">
+    <header class="hero">
+      <div class="eyebrow">SCAFFOLD · 工程体检 · 2026.10.29</div>
+      <h1>骨架先健康<br>再谈项目起步</h1>
+      <div class="tagline">CI 清零 · 文档可跑 · 平台差异写清</div>
+      <p class="sub">tongyun-scaffold 是 planner-pro 等新项目的起点。本单修好失败的 CI，并把 README 的初始化路径变成可重复执行的烟测，同时补上真实的平台限制说明。</p>
+      <div class="hero-meta"><span>PR #9</span><span>CI 双平台绿</span><span>等待人工审查合并</span></div>
+    </header>
+
+    <div class="intro" aria-label="关键摘要">
+      <div><strong>WHY / 背景</strong><span>main 上最新 CI 失败在 shellcheck，健康检查单要求先让脚手架自身可靠。</span></div>
+      <div><strong>WHAT / 结果</strong><span>1 条有意单引号正则加豁免；新增 README 初始化烟测；修正过时文档。</span></div>
+      <div><strong>HOW / 验证</strong><span>本地 shellcheck 0.11.0 清零，CI ubuntu/macos 全部步骤通过。</span></div>
+    </div>
+
+    <section class="doc-section" id="section-01">
+      <div class="section-eyebrow">01 / SUMMARY</div>
+      <h2>执行摘要</h2>
+      <p>本仓没有 npm 依赖，安全/静态检查的等价工具是 shellcheck。修复前，CI 在 ubuntu 的 shellcheck 步骤因 <code>SC2016</code> 失败，macos 任务随之取消；修复后，两个平台全部步骤通过，并新增一条离线 README 初始化烟测，防止文档与脚本再次漂移。</p>
+      <blockquote>结论：CI 已恢复全绿（PR #9），README 的一分钟初始化在 CI 中可重复跑通；Windows 本地因符号链接权限限制无法完整自检，该差异已写进 README 与测试文档。</blockquote>
+    </section>
+
+    <section class="doc-section" id="section-02">
+      <div class="section-eyebrow">02 / CHANGES</div>
+      <h2>改动清单</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>文件</th><th>改动</th><th>原因</th></tr></thead>
+          <tbody>
+            <tr><td><code>scripts/selftest.sh</code></td><td>为扫描 <code>$VAR</code> 紧跟多字节字符的 grep 正则补 <code># shellcheck disable=SC2016</code></td><td>单引号是有意的：正则要原样交给 grep，不能让 shell 展开；这是 CI 唯一失败点</td></tr>
+            <tr><td><code>.github/workflows/selftest.yml</code></td><td>新增「README 一分钟初始化（离线，跳过 skill 同步）」步骤</td><td>让 README 的命令、软链与 git 提交在干净 runner 上可重复验证</td></tr>
+            <tr><td><code>README.md</code></td><td>补充 Windows Git Bash 的符号链接限制与替代方式</td><td>实测无开发者模式/管理员权限时，软链入口退化为副本，完整自检失败</td></tr>
+            <tr><td><code>docs/development.md</code></td><td>把「测试未建立」改为真实命令：<code>shellcheck scripts/*.sh</code>、<code>bash scripts/selftest.sh</code></td><td>文档与现有 CI 不一致，属于过时描述</td></tr>
+            <tr><td><code>docs/testing.md</code></td><td>说明 Windows 需符号链接权限，CI 只在 Linux/macOS 跑完整自检</td><td>避免把「语法兼容」误读为「Windows 全量可跑」</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="doc-section" id="section-03">
+      <div class="section-eyebrow">03 / EVIDENCE</div>
+      <h2>验证与证据</h2>
+      <h3>静态检查（对应「npm audit 高危 0」）</h3>
+      <p>修复前，用 Git 内 LF 原文运行 shellcheck 0.11.0 得到 1 条 <code>SC2016</code>；修复后同一命令无输出、退出码 0。</p>
+      <pre>shellcheck -x scripts/*.sh
+# before: SC2016 at selftest.sh:246 (info)
+# after : no output, exit 0</pre>
+      <h3>README 初始化（本地）</h3>
+      <pre>SKIP_SKILLS_SYNC=1 bash scripts/init-project.sh demo "README smoke" &lt;tmp&gt;
+# 产出 AGENTS.md / docs/ / .gitignore / scripts/sync-skills.sh
+# git init + add + commit 成功（e7c481a）
+# 注：Windows 下 CLAUDE.md 为副本而非软链，属已知平台限制</pre>
+      <h3>CI（干净 runner）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>平台</th><th>自检</th><th>README 烟测</th><th>shellcheck</th></tr></thead>
+          <tbody>
+            <tr><td>ubuntu-latest</td><td>success</td><td>success</td><td>success</td></tr>
+            <tr><td>macos-latest</td><td>success</td><td>success</td><td>skipped（仅 Linux）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>运行记录：代码提交 <code>5e51e01</code> 的 GitHub Actions run <code>40891393174</code>；本交付 HTML 是该提交之后的文档追加，不改变被测代码。</p>
+    </section>
+
+    <section class="doc-section" id="section-04">
+      <div class="section-eyebrow">04 / LIMITS</div>
+      <h2>限制与风险</h2>
+      <ul>
+        <li>本仓无 npm 依赖，<code>npm audit</code> 不适用；以 shellcheck 作为等价静态检查，并给出前后对比。</li>
+        <li>开源 lite skill 仓仍是占位地址（仓名待定），README 的完整 skill 同步路径只能走降级警告；烟测使用 <code>SKIP_SKILLS_SYNC=1</code> 保持离线确定性。</li>
+        <li>本机 Windows 无符号链接权限、无 Docker/WSL，未能本地复现 Linux 全量自检；以 CI 双平台结果为准。</li>
+        <li>PR 仅完成代码与验证，未合并、未发布；合并仍由人工审查决定。</li>
+      </ul>
+    </section>
+
+    <section class="doc-section" id="section-05">
+      <div class="section-eyebrow">05 / DELIVERY</div>
+      <h2>交付信息</h2>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td>任务</td><td><code>891093304378901360</code> · tongyun-scaffold 体检</td></tr>
+            <tr><td>工人</td><td>qoder-gem / GEM</td></tr>
+            <tr><td>分支 / 提交</td><td><code>qoder-gem/scaffold-health-1029</code> · <code>5e51e01</code></td></tr>
+            <tr><td>PR</td><td><a href="https://github.com/dangzhuotong/tongyun-scaffold/pull/9">dangzhuotong/tongyun-scaffold#9</a></td></tr>
+            <tr><td>CI</td><td>run 40891393174 · ubuntu / macos 全绿</td></tr>
+            <tr><td>时间</td><td>2026-10-29</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footer">橦云 Tongyun · 工程交付快照 · 未合并、未发布</div>
+  </main>
+</div>
+</body>
+</html>
