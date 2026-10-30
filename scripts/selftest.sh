@@ -243,6 +243,7 @@ echo "=== [13/13] macOS bash 3.2 回归护栏：变量引用后紧跟多字节�
 # 背景（#7）：bash 3.2（macOS /bin/bash）在 C 区域下会把紧跟变量的多字节字符并入
 # 变量名，于是「变量名 + 全角右括号」被当成未定义变量，set -u 直接退出，警告从未打印。
 # 这里静态扫描生产脚本，禁止未加花括号的 $VAR / $1 后紧跟非 ASCII 字节，防止同类回归。
+# shellcheck disable=SC2016  # 单引号是故意的：正则要原样交给 grep，不能让 shell 展开
 if LC_ALL=C grep -nE '\$([A-Za-z_][A-Za-z0-9_]*|[0-9]+)[^ -~]' "$ROOT/scripts/"*.sh; then
   fail "scripts/ 里出现 \$VAR 紧跟多字节字符（macOS bash 3.2 会误并入变量名，请改成 \${VAR}）"
 fi

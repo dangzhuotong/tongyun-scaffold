@@ -17,6 +17,8 @@ cd ~/code/my-app && git init && git add -A && git commit -m "init from tongyun-s
 
 `bash scripts/selftest.sh` 自检。
 
+Windows 的 Git Bash 默认不能创建符号链接，`CLAUDE.md`、`.claude/skills`、`.cursor/skills` 会退化为副本，完整自检也会失败；请在开发者模式/管理员权限下以 `MSYS=winsymlinks:nativestrict` 运行，或改用 WSL / macOS / Linux。
+
 `init-project.sh` 会写入：`AGENTS.md`（`CLAUDE.md` 软链到它）、`docs/*` 骨架（含界面守则清单 `docs/design/ui-guard.md`）、`.agents/notes/`（proposed / implemented / rejected / archived）、`.agents/skills/`（Coding 套装 7 个 skill 的真实文件，默认开源 lite 版）、`.claude/skills` / `.cursor/skills` 软链、`scripts/sync-skills.sh`、`.gitignore` 建议项；**不会**替你选技术栈或装依赖。不要初始化到脚手架目录本身。
 
 ## 轻量 DDD（给 Agent 用）

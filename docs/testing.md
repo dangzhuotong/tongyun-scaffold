@@ -45,6 +45,7 @@ bash tests/test_sync_skills.sh
    - 在测试前后显式 `unset` 相关环境变量（`TONGYUN_SKILLS_*`、`SKIP_SKILLS_SYNC`、`FORCE` 等）。
 4. **Shell 兼容性**：
    - 采用 POSIX / bash 3.2+ 兼容语法（兼容 macOS 默认 bash、Linux bash 与 Windows Git Bash）。
+   - Windows Git Bash 还需能创建符号链接（开发者模式/管理员权限并设置 `MSYS=winsymlinks:nativestrict`），否则软链断言会失败；CI 只在 Linux / macOS 跑完整自检。
    - 启用 `set -euo pipefail` 确保未定义变量、命令管道故障即时中断。
 
 ---

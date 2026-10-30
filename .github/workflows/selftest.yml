@@ -13,6 +13,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: init-project selftest (macOS 用系统 /bin/bash 3.2)
         run: /bin/bash scripts/selftest.sh
+      - name: README 一分钟初始化（离线，跳过 skill 同步）
+        run: |
+          set -euo pipefail
+          DEMO="$(mktemp -d)/demo"
+          HOME="$(mktemp -d)" SKIP_SKILLS_SYNC=1 /bin/bash scripts/init-project.sh demo "README smoke" "$DEMO"
+          for f in AGENTS.md docs/prd.md docs/plan.md docs/development.md scripts/sync-skills.sh .gitignore; do
+            test -f "$DEMO/$f"
+          done
+          test -L "$DEMO/CLAUDE.md"
+          test -L "$DEMO/.claude/skills"
+          test -L "$DEMO/.cursor/skills"
+          git -C "$DEMO" init -q
+          git -C "$DEMO" add -A
+          git -C "$DEMO" -c user.name=ci -c user.email=ci@example.com commit -qm "init from tongyun-scaffold"
+          echo "README smoke ok: $DEMO"
       - name: shellcheck
         if: runner.os == 'Linux'
         run: shellcheck scripts/*.sh
