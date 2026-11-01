@@ -1,12 +1,12 @@
 # 开发与命令
 
-状态：脚手架脚本自身已有自检；**应用构建/运行命令未建立**（选定技术栈后补齐）。
+脚手架为 Bash 脚本和文档模板，不运行常驻服务。
 
-| 任务 | 命令 | 前提 | 成功条件 | 状态 |
-| --- | --- | --- | --- | --- |
-| 安装依赖 | 未建立 |  |  | 未建立 |
-| 检查 | `shellcheck scripts/*.sh` | 本机有 shellcheck | 无输出、退出码 0 | 已建立（CI Linux 执行） |
-| 测试 | `bash scripts/selftest.sh` | bash 3.2+ | 输出 `selftest ok`、退出码 0 | 已建立（CI 双平台执行） |
-| 运行 | 未建立 |  |  | 未建立 |
+| 任务 | 命令 | 成功条件 |
+| --- | --- | --- |
+| 全套回归 | `bash scripts/selftest.sh` | 退出 0，末尾 selftest ok |
+| 初始化专项 | `bash tests/test_init_project.sh` | 退出 0 |
+| 同步专项 | `bash tests/test_sync_skills.sh` | 退出 0 |
+| 静态检查 | `shellcheck scripts/*.sh` | 退出 0（需安装 ShellCheck） |
 
-不要在 AGENTS.md 重复维护本表。
+生成项目的技术栈和运行命令由各项目维护，模板中保留「未建立」。

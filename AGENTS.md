@@ -4,7 +4,7 @@
 
 ## 项目与修改入口
 
-- 用途：Tong 系列项目初始化脚手架（公开模板）
+- 用途：Tongyun 系列项目初始化脚手架（公开模板）
 - 技术栈：未建立（初始化后由人补齐；不要假装已有脚手架）
 - 轻量 DDD：限界上下文与目录见 [docs/architecture.md](docs/architecture.md)。跨上下文不要直接改对方的持久化或内部类型。
 
@@ -26,7 +26,7 @@
 
 ## 配套技能（本仓特殊约束）
 
-本仓是公开脚手架，**只放脚本和模板，绝不提交 skill 正文**（lite 版在单独的开源仓，pro 版在私有、商业许可的 tongyun-skills-plus）。skill 由 `scripts/init-project.sh` → `scripts/sync-skills.sh` 按 `--edition lite|pro`（默认 lite）复制进**新项目**的 `.agents/skills/`。生成项目的规则模板见 [templates/AGENTS.md](templates/AGENTS.md)，说明见 [docs/skills.md](docs/skills.md)。改脚本后跑 `bash scripts/selftest.sh`。
+本仓是公开脚手架，**只放脚本和模板，绝不提交 skill 正文**。现行来源是商业许可的 `tongyun-skills`，安装名统一为 `tongyun-*`。`scripts/init-project.sh` → `scripts/sync-skills.sh` 把 Coding 套装七个目录复制进新项目的 `.agents/skills/`；项目规范并入 `tongyun-product/jobs/project/JOB.md`。旧 `--edition pro` 和 `TONGYUN_SKILLS_PLUS` 仅为兼容入口，lite 已停用，不允许把商业技能标为开源 lite。生成规则见 [templates/AGENTS.md](templates/AGENTS.md)，来源与迁移见 [docs/skills.md](docs/skills.md)。改脚本后跑 `bash scripts/selftest.sh`。
 
 ## 修改约束
 

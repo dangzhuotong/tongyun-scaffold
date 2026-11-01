@@ -5,7 +5,7 @@
 ## 令牌优先
 
 - [ ] **严禁字面值**：颜色、圆角、内边距与间距等样式仅使用设计令牌（Tokens），不写硬编码数值。
-- [ ] **取值基准**：令牌数值统一遵循根目录 [DESIGN.md](../../DESIGN.md)（由 `tong-ui-design` 或 `tong-project` 生成；若缺失则先创建）。
+- [ ] **取值基准**：令牌数值统一遵循根目录 [DESIGN.md](../../DESIGN.md)（由 `tongyun-ui-design` 或 `tongyun-product/jobs/project` 生成；若缺失则先创建）。
 - [ ] **同级复用**：添加新样式前，优先复用相邻同级页面的既有取值与结构。
 
 ## 字体

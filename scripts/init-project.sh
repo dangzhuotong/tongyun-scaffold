@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
-# 初始化 Tong 系列新项目：AGENTS/CLAUDE、docs 骨架、.agents/{skills,notes}，并复制 Coding 套装 skill（lite 或 pro）。
-# 用法：bash scripts/init-project.sh [--edition lite|pro] <项目名> <一句话用途> [目标目录，默认 .]
-#   --edition：Coding 套装用开源 lite 版（默认，无需权限）还是商业 pro 版（私有 tongyun-skills-plus）
-# 环境变量：FORCE=1 覆盖已存在文件；SKIP_SKILLS_SYNC=1 不同步 skill；TONGYUN_SKILLS_EDITION=lite|pro 同 --edition；
+# 初始化 Tongyun 系列新项目：AGENTS/CLAUDE、docs 骨架、.agents/{skills,notes}，并复制 Coding 套装 skill（tongyun 系列）。
+# 用法：bash scripts/init-project.sh [--edition tongyun|pro] <项目名> <一句话用途> [目标目录，默认 .]
+#   --edition pro 为兼容别名；lite 已停用，现行技能使用来源仓商业许可。
+# 环境变量：FORCE=1 覆盖已存在文件；SKIP_SKILLS_SYNC=1 不同步 skill；TONGYUN_SKILLS_EDITION=tongyun|pro 同 --edition；
 #           skill 来源变量见 scripts/sync-skills.sh
 set -euo pipefail
 
-EDITION="${TONGYUN_SKILLS_EDITION:-lite}"
+EDITION="${TONGYUN_SKILLS_EDITION:-tongyun}"
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --edition) [[ $# -ge 2 ]] || { echo "--edition 需要 lite 或 pro" >&2; exit 2; }; EDITION="$2"; shift 2 ;;
-    --edition=*) EDITION="${1#--edition=}"; shift ;;
+    --edition) [[ $# -ge 2 && -n "$2" ]] || { echo "--edition 需要 tongyun 或 pro" >&2; exit 2; }; EDITION="$2"; shift 2 ;;
+    --edition=*) [[ -n "${1#--edition=}" ]] || { echo "--edition 需要 tongyun 或 pro" >&2; exit 2; }; EDITION="${1#--edition=}"; shift ;;
+    -*) echo "未知参数 $1" >&2; exit 2 ;;
     *) break ;;
   esac
 done
 case "$EDITION" in
-  lite|pro) ;;
-  *) echo "版本只能是 lite 或 pro，收到：$EDITION" >&2; exit 2 ;;
+  tongyun|pro) ;;
+  lite) echo "lite 已停用；现行 tongyun-skills 为商业技能库，请确认许可后使用 --edition tongyun。" >&2; exit 2 ;;
+  *) echo "版本只能是 tongyun 或 pro，收到：$EDITION" >&2; exit 2 ;;
 esac
 
 NAME="${1:-my-project}"
@@ -82,16 +84,7 @@ make_link() {
   fi
 }
 
-AGENTS_FRESH=1
-if [[ -e "$TARGET/AGENTS.md" && "$FORCE" != "1" ]]; then AGENTS_FRESH=0; fi
 render_file "$TPL/AGENTS.md" "$TARGET/AGENTS.md"
-# 模板按 lite 名字写；选 pro 时把点名的 7 个 skill 链接改成 tong-*-pro（同步失败时链接也对得上）
-if [[ "$AGENTS_FRESH" == 1 && "$EDITION" == "pro" ]]; then
-  tmp_agents="$(mktemp)"
-  sed -E 's#tong-(project|product|ui-design|api|test|code-review|deploy)([]/])#tong-\1-pro\2#g' "$TARGET/AGENTS.md" > "$tmp_agents"
-  cat "$tmp_agents" > "$TARGET/AGENTS.md"
-  rm -f "$tmp_agents"
-fi
 render_file "$TPL/docs/prd.md" "$TARGET/docs/prd.md"
 copy_file "$TPL/docs/plan.md" "$TARGET/docs/plan.md"
 copy_file "$TPL/docs/architecture.md" "$TARGET/docs/architecture.md"
@@ -135,25 +128,12 @@ echo "已写入 $TARGET ：AGENTS.md CLAUDE.md docs/ .agents/ .gitignore"
 if [[ "${SKIP_SKILLS_SYNC:-0}" == "1" ]]; then
   echo "已跳过 skill 同步（SKIP_SKILLS_SYNC=1）。之后在项目根目录运行：bash scripts/sync-skills.sh"
 elif ! bash "$TARGET/scripts/sync-skills.sh" --edition "$EDITION" "$TARGET"; then
-  if [[ "$EDITION" == "pro" ]]; then
-    cat >&2 <<'MSG'
+  cat >&2 <<'MSG'
 
-⚠️  警告：没拿到 tongyun-skills-plus（pro 版），Coding 套装 skill 未复制（项目其余部分已初始化成功）。
-   能访问私有仓后，在项目根目录运行：
-     bash scripts/sync-skills.sh --edition pro
-   或指定本地 checkout：
-     TONGYUN_SKILLS_PLUS=/path/to/tongyun-skills-plus bash scripts/sync-skills.sh --edition pro
-   不需要 pro 的话，用开源 lite 版：bash scripts/sync-skills.sh --edition lite
-MSG
-  else
-    cat >&2 <<'MSG'
-
-⚠️  警告：没拿到开源 lite 版 skill 仓（离线或地址不对），Coding 套装 skill 未复制（项目其余部分已初始化成功）。
-   联网后在项目根目录运行：
+⚠️  警告：未取得完整 tongyun-skills Coding 套装，技能未复制（项目其余部分已初始化成功）。
+   核对来源仓权限与商业许可后，在项目根目录运行：
      bash scripts/sync-skills.sh
-   或指定本地 checkout / 地址：
-     TONGYUN_SKILLS_LITE=/path/to/lite-repo bash scripts/sync-skills.sh
-     TONGYUN_SKILLS_LITE_GIT=<git 地址> bash scripts/sync-skills.sh
+   或指定已有本地 checkout：
+     TONGYUN_SKILLS=/path/to/tongyun-skills bash scripts/sync-skills.sh
 MSG
-  fi
 fi

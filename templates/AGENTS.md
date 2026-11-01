@@ -19,24 +19,25 @@
 | 测试 | [docs/testing/acceptance-tests.md](docs/testing/acceptance-tests.md) |
 | 长期决定 | [docs/decisions/](docs/decisions/)；设计取舍记 [.agents/notes/](.agents/notes/README.md) |
 
-项目 skill 都在 `.agents/skills/`（随仓库提交，`.claude/skills`、`.cursor/skills` 指向同一份）。用到哪个，先读它的 `SKILL.md` 再动手。当前用的是开源 lite 版还是商业 pro 版，看 `.agents/skills/SOURCES.md`；切版本用 `scripts/sync-skills.sh --edition`，下面的链接会跟着改。
+项目 skill 都在 `.agents/skills/`（随仓库提交，`.claude/skills`、`.cursor/skills` 指向同一份）。用到哪个，先读它的 `SKILL.md` 再动手。来源与 commit 见 `.agents/skills/SOURCES.md`；用 `scripts/sync-skills.sh` 刷新。技能遵循来源仓商业许可，项目公开前核对分发授权。
 
 ## 开发流程
 
-1. **改规则 / 文档结构 / 加工种**：按 [tong-project](.agents/skills/tong-project/SKILL.md) 改本文件和 `docs/`。
-2. **需求、验收**：按 [tong-product](.agents/skills/tong-product/SKILL.md) 写进 [docs/prd.md](docs/prd.md)，保留 R-xx / AT-xx 编号。
+1. **改规则 / 文档结构 / 加工种**：按 [tongyun-product 的项目规范](.agents/skills/tongyun-product/jobs/project/JOB.md) 改本文件和 `docs/`。
+2. **需求、验收**：按 [tongyun-product](.agents/skills/tongyun-product/SKILL.md) 写进 [docs/prd.md](docs/prd.md)，保留 R-xx / AT-xx 编号。
 3. **实现**：
-   - Web 界面按 [tong-ui-design](.agents/skills/tong-ui-design/SKILL.md)；
-   - 后端接口、数据、迁移按 [tong-api](.agents/skills/tong-api/SKILL.md)。
+   - Web 界面按 [tongyun-ui-design](.agents/skills/tongyun-ui-design/SKILL.md)；
+   - 后端接口、数据、迁移按 [tongyun-api](.agents/skills/tongyun-api/SKILL.md)。
    改动前读受影响上下文的规则和实现，写清目标行为与验收方式。
-4. **推送前**：按 [tong-test](.agents/skills/tong-test/SKILL.md) 跑验收并如实记录结果，再按 [tong-code-review](.agents/skills/tong-code-review/SKILL.md) 审一遍 diff。只报实际跑过的命令。
-5. **部署**：只在用户明确授权范围内，按 [tong-deploy](.agents/skills/tong-deploy/SKILL.md) 执行，留健康证据和回滚说明。
+4. **推送前**：按 [tongyun-test](.agents/skills/tongyun-test/SKILL.md) 跑验收并如实记录结果，再按 [tongyun-code-review](.agents/skills/tongyun-code-review/SKILL.md) 审一遍 diff。只报实际跑过的命令。
+5. **Mac 应用安装验收**：按 [tongyun-mac-ship](.agents/skills/tongyun-mac-ship/SKILL.md) 在授权范围内完成构建、安装与启动验证。
+6. **部署**：只在用户明确授权范围内，按 [tongyun-deploy](.agents/skills/tongyun-deploy/SKILL.md) 执行，留健康证据和回滚说明。
 
 命令表只在 [docs/development.md](docs/development.md) 维护。未建立的入口标「未建立」，**不要声称跑过不存在的命令**。
 
 ## 项目自己的 skill
 
-本项目特有的做法（例如 `{{PROJECT_NAME}}-pre-push-checks`）写成 `.agents/skills/<项目名>-xxx/SKILL.md`，和 tong-* 放在一起，并在上面对应步骤里点名。`tong-*` 由 `scripts/sync-skills.sh` 管理，别直接改（重同步会覆盖），来源见 `.agents/skills/SOURCES.md`。
+本项目特有的做法（例如 `{{PROJECT_NAME}}-pre-push-checks`）写成 `.agents/skills/<项目名>-xxx/SKILL.md`，和 tongyun-* 放在一起，并在上面对应步骤里点名。套装中的七个 `tongyun-*` 由 `scripts/sync-skills.sh` 管理，别直接改（重同步会覆盖），来源见 `.agents/skills/SOURCES.md`。
 
 ## 修改约束
 

@@ -1,75 +1,46 @@
-# 配套开发技能（项目级 skill）
+# 项目级 Tongyun Coding 技能
 
-做法参考 [deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)：项目用的 skill 当源码提交在项目里的 `.agents/skills/<名字>/SKILL.md`，各家 Agent 通过软链读同一份，`AGENTS.md` 在用到的步骤里直接点名。
+技能是生成项目中的真实文件，来源为商业许可仓 `dangzhuotong/tongyun-skills`。脚手架只存模板与同步脚本，不存技能正文。技能使用与分发遵循来源许可，不能因脚手架是 MIT 就视为开源；项目公开前核对授权。
 
-## 两个版本：lite（默认）和 pro
-
-Coding 套装 7 个工种（project / product / ui-design / api / test / code-review / deploy）有两个版本，init 和同步时二选一：
-
-| 版本 | skill 名 | 来源 | 许可 | 需要权限 |
-| --- | --- | --- | --- | --- |
-| **lite**（默认） | `tong-project`、`tong-product`、`tong-ui-design`、`tong-api`、`tong-test`、`tong-code-review`、`tong-deploy` | 开源仓（仓名待定，默认地址 `https://github.com/dangzhuotong/tongyun-skills-lite.git` 为占位） | MIT | 不需要 |
-| **pro** | 同名加 `-pro` | 私有仓 tongyun-skills-plus | 商业许可 | 需要 SSH 访问私有仓 |
-
-选版本：
-
-```bash
-bash scripts/init-project.sh --edition pro <名> <用途> <目录>   # init 时选
-TONGYUN_SKILLS_EDITION=pro bash scripts/init-project.sh ...      # 同上，用环境变量
-bash scripts/sync-skills.sh --edition lite                       # 已有项目里切换
-```
-
-`sync-skills.sh` 的版本顺序：`--edition` → `TONGYUN_SKILLS_EDITION` → 上次同步记在 `SOURCES.md` 的版本 → `lite`。加版本开关之前同步过的项目会被识别成 pro，重跑不会被悄悄换成 lite。
-
-切换版本时脚本会：复制新版本的 7 个目录、删掉另一版本的 7 个目录、重写 `SOURCES.md`，并把 `AGENTS.md` 里点名的 skill 链接改成新名字（只改这 7 个链接）。项目自己的 skill 不动。
-
-## 本仓（公开）只放脚本，不放 skill 正文
-
-两个版本的正文都不进脚手架。脚手架只提供：
-
-- `scripts/init-project.sh`：初始化新项目，并调用同步脚本；
-- `scripts/sync-skills.sh`：把选定版本的 7 个 skill 复制进**新项目**的 `.agents/skills/`。
-
-`sync-skills.sh` 拒绝对脚手架仓本身运行；`init-project.sh` 也不允许初始化到脚手架目录。本仓 `.gitignore` 忽略 `.agents/skills/`，selftest 会检查仓里没有 `SKILL.md`。
-
-## init 出来的项目长这样
+## 现行目录
 
 ```text
-AGENTS.md                   # 各步骤点名对应 skill
-CLAUDE.md -> AGENTS.md
-.agents/skills/tong-*/      # 真实文件，随项目提交（lite：tong-xxx；pro：tong-xxx-pro）
-.agents/skills/SOURCES.md   # edition + 来源仓 + commit SHA
-.agents/notes/{proposed,implemented,rejected,archived}/
+.agents/skills/
+  tongyun-product/        # 项目规范：jobs/project/JOB.md
+  tongyun-ui-design/
+  tongyun-api/
+  tongyun-test/
+  tongyun-code-review/
+  tongyun-deploy/
+  tongyun-mac-ship/
+  <项目名>-xxx/           # 自定义技能，脚本不管理
+  SOURCES.md              # edition: tongyun、来源、HEAD、目录 commit 和 dirty 标记
 .claude/skills -> ../.agents/skills
 .cursor/skills -> ../.agents/skills
-scripts/sync-skills.sh
-docs/...
+CLAUDE.md -> AGENTS.md
 ```
 
-## skill 来源
+用哪个工种由项目 `AGENTS.md` 对应步骤点名。原 project 工种并入 `tongyun-product/jobs/project/JOB.md`，Mac 应用安装验收使用 `tongyun-mac-ship`。
 
-lite：
+## 来源与刷新
 
-1. `TONGYUN_SKILLS_LITE=/path/to/lite-repo`（设置了就只用它，本地测试用）
-2. `~/.cache/tongyun-skills-lite`（存在则 `git pull --ff-only`）
-3. 否则 `git clone` `TONGYUN_SKILLS_LITE_GIT`（默认占位地址，开源仓建好后改成正式地址）到上面的缓存（缓存位置可用 `TONGYUN_SKILLS_LITE_CACHE` 改）
+```bash
+TONGYUN_SKILLS=/path/to/tongyun-skills bash scripts/sync-skills.sh
+# 已配置来源或可访问仓库时：
+bash scripts/sync-skills.sh
+```
 
-pro：
+来源顺序：`TONGYUN_SKILLS`（设置则只用此 checkout）→ `TONGYUN_SKILLS_CACHE`（默认 `~/.cache/tongyun-skills`）→ clone `TONGYUN_SKILLS_GIT`（默认 `https://github.com/dangzhuotong/tongyun-skills.git`）。现有缓存只快进更新，失败则警告并尝试沿用本地版本。
 
-1. `TONGYUN_SKILLS_PLUS=/path/to/tongyun-skills-plus`
-2. `~/.cache/tongyun-skills-plus`（存在则 `git pull --ff-only`）
-3. 否则 `git clone git@github.com:dangzhuotong/tongyun-skills-plus.git` 到上面的缓存（可用 `TONGYUN_SKILLS_PLUS_GIT` / `TONGYUN_SKILLS_CACHE` 改）
+完整校验七个 `SKILL.md` 与项目规范 `JOB.md` 后才写目标；整目录复制，包含 jobs、references、examples、assets、agents，展开软链并排除测试和临时文件。来源不完整时保留目标旧技能、规则和来源记录。init 在同步失败时保留骨架并警告，单独同步返回非零。
 
-拿不到来源仓时 init 照常完成，只打印警告，之后在项目里补跑 `bash scripts/sync-skills.sh`。
+重跑覆盖七个套装目录，保留其他技能；本地改动会覆盖，请用项目自己的技能记录特有规则。不要忽略 `.agents/skills/`。不写全局 Agent 安装目录，已存在的真实客户端 skills 目录保留并提示。
 
-复制时整目录带上 `references/`、`examples/`、`assets/`、`agents/`，去掉 `tests/`、`__pycache__`、`*.log`/`*.tmp` 等；软链会被展开成真实文件。
+## 旧项目迁移
 
-## 更新
+1. 审阅并把新版 `scripts/sync-skills.sh` 复制到目标项目；默认重跑 init 会跳过已有脚本，不会悄悄覆盖它。
+2. 指定现行来源后运行同步。旧 `--edition pro` / `--edition=pro`、`TONGYUN_SKILLS_PLUS` 和 `TONGYUN_SKILLS_PLUS_GIT` 兼容；新变量优先。现行 `--edition tongyun` 可省略。
+3. 成功复制后，清理原七个 `tong-*` / `tong-*-pro` 精确目录，迁移根 `AGENTS.md` 中对应 Markdown 链接。project 链接改为 product 下的 JOB；其他正文、相近名字和自定义技能保留。
+4. 审阅 `.agents/skills`、`AGENTS.md` 和来源记录的差异；其他历史文档若手写旧链接，按业务内容人工核对。
 
-在项目根目录重跑 `bash scripts/sync-skills.sh`：原地覆盖当前版本的 `tong-*`、重写 `SOURCES.md`。项目自己的 skill 用 `<项目名>-xxx` 命名放在同一目录，不会被动。
-
-## 注意
-
-- 这些 skill 是项目级的，不要装进本机全局 `~/.cursor/skills`、`~/.codex/skills`、`~/.workbuddy/skills`。
-- **用 pro 版的项目如果哪天公开，复制进去的 tong-*-pro 正文也会跟着公开。** 公开前先 `bash scripts/sync-skills.sh --edition lite` 切回开源版。lite 版是 MIT，公开没问题。
-- 内容/视频套装不进默认同步。
+旧 `SOURCES.md` 的 lite/pro 值不再决定安装目录。显式传入 `--edition lite` 或设置 `TONGYUN_SKILLS_EDITION=lite` 会退出并解释商业许可，不能静默把 lite 换成商业套装。旧 lite 来源变量不再使用。

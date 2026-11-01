@@ -12,30 +12,34 @@ fail() { echo "test_init_project 断言失败：$*" >&2; exit 1; }
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
-export HOME="$WORK/home"
-mkdir -p "$HOME"
-unset TONGYUN_SKILLS_PLUS TONGYUN_SKILLS_CACHE TONGYUN_SKILLS_PLUS_GIT TONGYUN_SKILLS_EDITION \
-  TONGYUN_SKILLS_LITE TONGYUN_SKILLS_LITE_CACHE TONGYUN_SKILLS_LITE_GIT SKIP_SKILLS_SYNC FORCE || true
+unset TONGYUN_SKILLS TONGYUN_SKILLS_GIT TONGYUN_SKILLS_PLUS TONGYUN_SKILLS_PLUS_GIT \
+  TONGYUN_SKILLS_EDITION TONGYUN_SKILLS_LITE TONGYUN_SKILLS_LITE_CACHE TONGYUN_SKILLS_LITE_GIT \
+  SKIP_SKILLS_SYNC FORCE || true
+export TONGYUN_SKILLS_CACHE="$WORK/cache"
 
-# 准备轻量 fake lite 仓 fixture
-FAKE_LITE="$WORK/fake-lite"
-mkdir -p "$FAKE_LITE/skills"
-for name in tong-project tong-product tong-ui-design tong-api tong-test tong-code-review tong-deploy; do
-  mkdir -p "$FAKE_LITE/skills/$name"
-  printf -- '---\nname: %s\n---\n# %s\n' "$name" "$name" > "$FAKE_LITE/skills/$name/SKILL.md"
+# 准备现行 Tongyun 仓 fixture
+FAKE_SOURCE="$WORK/fake-tongyun"
+mkdir -p "$FAKE_SOURCE/skills"
+for name in tongyun-product tongyun-ui-design tongyun-api tongyun-test tongyun-code-review tongyun-deploy tongyun-mac-ship; do
+  mkdir -p "$FAKE_SOURCE/skills/$name"
+  printf -- '---\nname: %s\n---\n# %s\n' "$name" "$name" > "$FAKE_SOURCE/skills/$name/SKILL.md"
 done
-git -C "$FAKE_LITE" init -q
-git -C "$FAKE_LITE" -c user.name=t -c user.email=t@t add -A
-git -C "$FAKE_LITE" -c user.name=t -c user.email=t@t commit -qm fixture
-export TONGYUN_SKILLS_LITE="$FAKE_LITE"
+mkdir -p "$FAKE_SOURCE/skills/tongyun-product/jobs/project"
+echo project-job > "$FAKE_SOURCE/skills/tongyun-product/jobs/project/JOB.md"
+git -C "$FAKE_SOURCE" init -q
+git -C "$FAKE_SOURCE" -c user.name=t -c user.email=t@t add -A
+git -C "$FAKE_SOURCE" -c user.name=t -c user.email=t@t commit -qm fixture
+export TONGYUN_SKILLS="$FAKE_SOURCE"
 
-# 准备轻量 fake pro 仓 fixture
+# 准备旧变量兼容 仓 fixture
 FAKE_PRO="$WORK/fake-pro"
 mkdir -p "$FAKE_PRO/skills"
-for name in tong-project-pro tong-product-pro tong-ui-design-pro tong-api-pro tong-test-pro tong-code-review-pro tong-deploy-pro; do
+for name in tongyun-product tongyun-ui-design tongyun-api tongyun-test tongyun-code-review tongyun-deploy tongyun-mac-ship; do
   mkdir -p "$FAKE_PRO/skills/$name"
   printf -- '---\nname: %s\n---\n# %s\n' "$name" "$name" > "$FAKE_PRO/skills/$name/SKILL.md"
 done
+mkdir -p "$FAKE_PRO/skills/tongyun-product/jobs/project"
+echo project-job > "$FAKE_PRO/skills/tongyun-product/jobs/project/JOB.md"
 git -C "$FAKE_PRO" init -q
 git -C "$FAKE_PRO" -c user.name=t -c user.email=t@t add -A
 git -C "$FAKE_PRO" -c user.name=t -c user.email=t@t commit -qm fixture
@@ -46,13 +50,13 @@ echo "[test_init_project] 1. --edition 参数缺失或非法时退出码为 2"
 status=0
 out_missing="$(bash "$INIT_SH" --edition 2>&1)" || status=$?
 [[ "$status" -eq 2 ]] || fail "--edition 缺少参数时退出码应为 2，实际为 $status"
-grep -Fq -- "--edition 需要 lite 或 pro" <<< "$out_missing" || fail "未提示 --edition 需要 lite 或 pro"
+grep -Fq -- "--edition 需要 tongyun 或 pro" <<< "$out_missing" || fail "未提示 --edition 需要 tongyun 或 pro"
 
 # 非法版本（等号语法）
 status=0
 out_invalid="$(bash "$INIT_SH" --edition=invalid mypkg "desc" "$WORK/p_err" 2>&1)" || status=$?
 [[ "$status" -eq 2 ]] || fail "--edition=invalid 退出码应为 2，实际为 $status"
-grep -Fq "版本只能是 lite 或 pro" <<< "$out_invalid" || fail "未提示版本只能是 lite 或 pro"
+grep -Fq "版本只能是 tongyun 或 pro" <<< "$out_invalid" || fail "未提示版本只能是 tongyun 或 pro"
 
 echo "[test_init_project] 2. SKIP_SKILLS_SYNC=1 跳过 skill 同步"
 P_SKIP="$WORK/p_skip"
@@ -61,21 +65,21 @@ grep -Fq "已跳过 skill 同步（SKIP_SKILLS_SYNC=1）" <<< "$out_skip" || fai
 [[ -f "$P_SKIP/AGENTS.md" ]] || fail "缺少 AGENTS.md"
 [[ -f "$P_SKIP/docs/prd.md" ]] || fail "缺少 docs/prd.md"
 [[ -x "$P_SKIP/scripts/sync-skills.sh" ]] || fail "缺少可执行的 sync-skills.sh"
-[[ ! -e "$P_SKIP/.agents/skills/tong-project" ]] || fail "SKIP_SKILLS_SYNC=1 时不应复制 skill"
+[[ ! -e "$P_SKIP/.agents/skills/tongyun-product" ]] || fail "SKIP_SKILLS_SYNC=1 时不应复制 skill"
 [[ ! -e "$P_SKIP/.agents/skills/SOURCES.md" ]] || fail "SKIP_SKILLS_SYNC=1 时不应生成 SOURCES.md"
 
 echo "[test_init_project] 3. --edition=pro 等号形式传参"
 P_EQ_PRO="$WORK/p_eq_pro"
-bash "$INIT_SH" --edition=pro "eq-pro-pkg" "eq-pro-desc" "$P_EQ_PRO"
-[[ -f "$P_EQ_PRO/.agents/skills/tong-project-pro/SKILL.md" ]] || fail "--edition=pro 未复制 tong-project-pro"
-grep -qx -- "- edition: pro" "$P_EQ_PRO/.agents/skills/SOURCES.md" || fail "SOURCES.md 未记录 edition: pro"
-grep -Fq "tong-api-pro" "$P_EQ_PRO/AGENTS.md" || fail "AGENTS.md 未替换为 pro skill 链接"
+TONGYUN_SKILLS='' bash "$INIT_SH" --edition=pro "eq-pro-pkg" "eq-pro-desc" "$P_EQ_PRO"
+[[ -f "$P_EQ_PRO/.agents/skills/tongyun-product/SKILL.md" ]] || fail "--edition=pro 未复制 tongyun-product"
+grep -qx -- "- edition: tongyun" "$P_EQ_PRO/.agents/skills/SOURCES.md" || fail "SOURCES.md 未记录 edition: tongyun"
+grep -Fq "tongyun-api" "$P_EQ_PRO/AGENTS.md" || fail "AGENTS.md 缺少现行 tongyun skill 链接"
 
 echo "[test_init_project] 4. TONGYUN_SKILLS_EDITION=pro 环境变量默认生效"
 P_ENV_PRO="$WORK/p_env_pro"
 TONGYUN_SKILLS_EDITION=pro bash "$INIT_SH" "env-pro-pkg" "env-pro-desc" "$P_ENV_PRO"
-[[ -f "$P_ENV_PRO/.agents/skills/tong-project-pro/SKILL.md" ]] || fail "TONGYUN_SKILLS_EDITION 未生效"
-grep -qx -- "- edition: pro" "$P_ENV_PRO/.agents/skills/SOURCES.md" || fail "SOURCES.md 未记录 edition: pro"
+[[ -f "$P_ENV_PRO/.agents/skills/tongyun-product/SKILL.md" ]] || fail "TONGYUN_SKILLS_EDITION 未生效"
+grep -qx -- "- edition: tongyun" "$P_ENV_PRO/.agents/skills/SOURCES.md" || fail "SOURCES.md 未记录 edition: tongyun"
 
 echo "[test_init_project] 5. 软链保护：已有实体文件 CLAUDE.md 不被破坏"
 P_REAL_FILE="$WORK/p_real_file"
