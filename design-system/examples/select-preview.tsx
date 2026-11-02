@@ -54,9 +54,9 @@ function Upgrade({ native }: { native: HTMLSelectElement }) {
   );
 }
 
-for (const native of document.querySelectorAll<HTMLSelectElement>(
-  "select.ty-select",
-)) {
+function upgrade() {
+for (const native of document.querySelectorAll<HTMLSelectElement>("select.ty-select:not([data-upgraded])")) {
+  native.dataset.upgraded = "true";
   const host = document.createElement("div");
   host.className = "ty-select-mount";
   native.after(host);
@@ -68,3 +68,7 @@ for (const native of document.querySelectorAll<HTMLSelectElement>(
   native.tabIndex = -1;
   createRoot(host).render(<Upgrade native={native} />);
 }
+
+}
+document.addEventListener("ty:upgrade", upgrade);
+upgrade();
