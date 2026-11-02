@@ -10,3 +10,5 @@
 | 静态检查 | `shellcheck scripts/*.sh` | 退出 0（需安装 ShellCheck） |
 
 生成项目的技术栈和运行命令由各项目维护，模板中保留「未建立」。
+
+UI 资产生成：`node design-system/scripts/build-tokens.mjs`；一致性与合同检查：`node design-system/scripts/build-tokens.mjs --check && node design-system/tests/contracts.mjs`。示例是可直接打开的静态文件，不需启动服务。React/Vue 编译须在有对应依赖的消费项目执行。

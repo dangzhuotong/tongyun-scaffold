@@ -18,6 +18,16 @@ TONGYUN_SKILLS=/path/to/tongyun-skills bash scripts/init-project.sh my-app "用�
 
 来源不可用时保留项目骨架并警告，后续补跑同步；`SKIP_SKILLS_SYNC=1` 可跳过同步。初始化默认保护已有文件，`FORCE=1` 才覆盖模板。已生成项目更新同步脚本时，先审阅并复制新版 `scripts/sync-skills.sh`，不要用 FORCE 覆盖整套业务文档。
 
+## UI Design System v0.1
+
+以手帐实际纸感界面为基准的无依赖共享资产位于 [design-system/](design-system/README.md)。可选接入：
+
+```bash
+bash scripts/init-project.sh --ui paper my-app "用途" /path/to/my-app
+```
+
+主题支持 paper、paper-dark、desktop、cloud，默认 none，不给后端项目加 UI。生成 `ui/` 和 `DESIGN.md`，接入入口由项目按已有技术栈完成，不安装第二套库；已有文件默认保护。Agent 继续通过独立技能库同步 tongyun-ui-design，本公开仓不放技能正文。
+
 ## Coding 技能
 
 现行套装为 `tongyun-product`、`tongyun-ui-design`、`tongyun-api`、`tongyun-test`、`tongyun-code-review`、`tongyun-deploy`、`tongyun-mac-ship`。项目规范在 `tongyun-product/jobs/project/JOB.md`，不是独立技能。

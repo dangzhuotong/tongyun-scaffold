@@ -1,0 +1,14 @@
+/* Import after tokens. Scope to the same theme root/portal container.
+   CSS color values: current full-color shadcn variables; NOT legacy hsl(var()). */
+[data-ty-theme] {
+ --background:var(--ty-canvas); --foreground:var(--ty-text);
+ --card:var(--ty-card); --card-foreground:var(--ty-text);
+ --popover:var(--ty-raised); --popover-foreground:var(--ty-text);
+ --primary:var(--ty-accent); --primary-foreground:var(--ty-on-accent);
+ --secondary:var(--ty-surface); --secondary-foreground:var(--ty-text);
+ --muted:var(--ty-raised); --muted-foreground:var(--ty-muted);
+ --accent:var(--ty-raised); --accent-foreground:var(--ty-text);
+ --destructive:var(--ty-danger); --destructive-foreground:var(--ty-card);
+ --border:var(--ty-border); --input:var(--ty-control-border); --ring:var(--ty-text);
+ --radius:var(--ty-radius-control);
+}

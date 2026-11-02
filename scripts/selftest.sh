@@ -106,6 +106,7 @@ grep -Fq '警告' <<< "$OUT" || fail '离线未警告'
 [[ -f "$WORK/offline/AGENTS.md" && ! -e "$WORK/offline/.agents/skills/SOURCES.md" ]] || fail '离线初始化状态错误'
 [[ ! -e "$TONGYUN_SKILLS_CACHE" ]] || fail '残缺缓存未清理'
 
+bash "$ROOT/tests/test_ui_init.sh"
 bash "$ROOT/tests/test_init_project.sh"
 bash "$ROOT/tests/test_sync_skills.sh"
 if git -C "$ROOT" ls-files | grep -q 'SKILL\.md$'; then fail '脚手架含技能正文'; fi

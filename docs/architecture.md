@@ -1,6 +1,6 @@
 # 架构（轻量 DDD）
 
-状态：提案（代码建立后改成「现行」并按真实目录更新）
+状态：脚手架资产边界现行；以下 src/ 为生成项目的结构建议。
 
 ## 原则
 
@@ -27,4 +27,8 @@ src/
 
 | 上下文 | 目录 | 职责 | 对外接口 |
 | --- | --- | --- | --- |
-| （待填） |  |  |  |
+| 项目初始化 | scripts/、templates/ | 生成项目规则和可选 UI 资产 | init-project.sh --ui |
+| UI 设计资产 | design-system/ | tokens、基础组件、页面模式与验收 | README.md、tokens.json、adapters/ |
+| 技能分发适配 | scripts/sync-skills.sh | 从独立许可来源同步技能 | sync-skills.sh |
+
+UI 集成取舍见 [ADR](decisions/0002-ui-assets.md)。产品业务与框架运行时属于消费项目，不进入共享设计资产。
