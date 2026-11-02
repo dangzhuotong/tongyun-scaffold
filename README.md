@@ -20,7 +20,7 @@ TONGYUN_SKILLS=/path/to/tongyun-skills bash scripts/init-project.sh my-app "用�
 
 ## UI Design System v0.1
 
-以手帐实际纸感界面为基准的无依赖共享资产位于 [design-system/](design-system/README.md)。可选接入：
+以手帐实际纸感界面为基准的轻量共享资产位于 [design-system/](design-system/README.md)。可选接入：
 
 ```bash
 bash scripts/init-project.sh --ui paper my-app "用途" /path/to/my-app

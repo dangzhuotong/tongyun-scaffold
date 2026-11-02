@@ -617,7 +617,7 @@
         </select>
       </div>
       <label class="check-setting"
-        ><input id="fail" type="checkbox" />测试创建失败与恢复</label
+        ><input id="fail" type="checkbox" class="ty-checkbox" />测试创建失败与恢复</label
       >
       <p class="dialog-description">
         测试失败时，任务输入会保留。所有演示修改刷新后重置。
@@ -674,6 +674,7 @@
       <button class="ty-button" id="detail-complete">标记完成</button>
     </dialog>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script defer src="select-preview.js"></script>
     <script type="module">
       const $ = (s) => document.querySelector(s);
       const $$ = (s) => [...document.querySelectorAll(s)];
@@ -900,6 +901,7 @@
       function setTheme(theme) {
         root.dataset.tyTheme = theme;
         $("#theme").value = theme;
+        $("#theme").dispatchEvent(new Event("ty:sync"));
         $("#theme-toggle").setAttribute(
           "aria-label",
           theme === "paper" ? "切换深色外观" : "切换浅色外观",

@@ -12,3 +12,5 @@
 生成项目的技术栈和运行命令由各项目维护，模板中保留「未建立」。
 
 UI 资产生成：`node design-system/scripts/build-tokens.mjs`；一致性与合同检查：`node design-system/scripts/build-tokens.mjs --check && node design-system/tests/contracts.mjs`。示例是可直接打开的静态文件，不需启动服务。React/Vue 编译须在有对应依赖的消费项目执行。
+
+可选 Select 预览构建：`node design-system/scripts/build-preview.mjs /path/to/deps`。隔离依赖安装、版本和第三方许可见 [适配器说明](../design-system/adapters/README.md)，不在脚手架内生成 node_modules。已提交离线 bundle，无依赖环境仍可运行示例和现有自检。

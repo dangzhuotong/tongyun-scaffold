@@ -14,4 +14,10 @@ Agent UI Skill 通过既有 sync-skills 取得，公开仓不复制商业正文�
 
 视觉交付必须先看真实场景，不能用测试台代替产品模板。当前样本是 examples/index.html：侧栏 → 标题及唯一主操作 → 概览条 → 今日行动/本周节奏 + 专注/随记。组合样式在 patterns/workspace.css，按 workspace 根作用域启用。主内容字号 12–15px，辅助信息 10–11px，微标签 8–9px 只用于不影响操作的次要说明；新消费项目按实际设备阅读距离复验。
 
-参考 shadcn Dashboard 的操作分组、表面层级，Tasks 的筛选和任务行密度；保留手帐暖纸与抹茶绿。本轮只参考设计关系，示例用原生 HTML，不宣称已经安装 shadcn 组件。效果验收须检查同一视口画面、主题切换后的稳定状态及主要交互，不能以编译通过代替视觉判断。
+参考 shadcn Dashboard 的操作分组、表面层级，Tasks 的筛选和任务行密度；保留手帐暖纸与抹茶绿。页面组合参考设计关系；Input/Button 使用共享 CSS，Select 使用 React + Radix，不宣称已经安装完整 shadcn registry。效果验收须检查同一视口画面、主题切换后的稳定状态及主要交互，不能以编译通过代替视觉判断。
+
+## 表单控件
+
+Input、Button、Select 默认高度 36px、圆角 8px，输入字号 14px、标签 13–14px。参考当前 shadcn Input/Select 的轻边框、单层焦点环和菜单密度；颜色沿用 Tongyun 主题。默认边框使用 input-border，focus 使用 control-border 加一层 3px 柔和环，增强对比模式恢复强边界。轻边框本身不作为独立 3:1 边界合格证明，消费项目仍需按实际表面验收。
+
+复杂 Select 使用 adapters/select.tsx 的 Radix 交互，不能再手写菜单键盘状态机。预览也使用相同适配器；表单在 native dialog 内时 Portal 必须留在该 dialog 中，同时继承主题。关闭、焦点返回、原生表单值、reset、disabled 和主题同步都要验证。

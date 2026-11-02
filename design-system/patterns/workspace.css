@@ -315,10 +315,11 @@ kbd {
   margin-top: 9px;
 }
 .workspace .ty-button {
-  min-height: 35px;
-  padding: 8px 13px;
-  border-color: var(--ws-line-strong);
-  font-size: 12px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-color: var(--ty-input-border);
+  font-size: 13px;
   gap: 7px;
   box-shadow: 0 1px 2px #00000005;
   transition:
@@ -1430,4 +1431,46 @@ kbd {
   .workspace .detail-sheet {
     padding: 22px;
   }
+}
+
+.workspace .dialog-form h2 {
+  font-size: 20px;
+  line-height: 1.4;
+}
+.workspace .dialog-form label,
+.workspace .setting-field label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.workspace .dialog-description {
+  font-size: 13px;
+}
+.workspace .dialog-form .ty-input,
+.workspace .dialog-form .ty-select-trigger,
+.workspace .setting-field .ty-select-trigger {
+  font-size: 14px;
+}
+.workspace .dialog-actions {
+  border-top: 0;
+  margin-top: 24px;
+  padding-top: 0;
+}
+.workspace .dialog-form .dialog-symbol {
+  display: none;
+}
+.workspace .dialog-form .dialog-heading {
+  margin-bottom: 0;
+  justify-content: flex-end;
+  height: 24px;
+}
+.workspace .dialog-form .dialog-heading .icon-button {
+  margin: -8px -8px 0 0;
+}
+.workspace .command-input input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.workspace .command-input:focus-within {
+  border-bottom-color: var(--ty-control-border);
 }

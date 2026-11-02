@@ -1,6 +1,6 @@
 # Tongyun UI Design System 0.1.0
 
-轻量源码资产，随 tongyun-scaffold 维护，不发布私有 npm 包。CSS 按原始 palette → 语义角色 → 组件别名三层输出；颜色只有一份真相 `tokens/tokens.json`，生成 `tokens/tokens.css`；组件样式不依赖框架且只作用于显式 `.ty-root`。手帐仅作为只读视觉来源，没有迁移它的业务代码。
+轻量源码资产，随 tongyun-scaffold 维护，不发布私有 npm 包。CSS 按原始 palette → 语义角色 → 组件别名三层输出；颜色只有一份真相 `tokens/tokens.json`，生成 `tokens/tokens.css`；基础组件样式不依赖框架且通过 `.ty-root` 启用；可选 React Select 依赖 Radix，预览含离线构建运行时。手帐仅作为只读视觉来源，没有迁移它的业务代码。
 
 ## 接入
 
@@ -9,6 +9,7 @@
 生成目录 `ui/`、根 `DESIGN.md`。在应用入口依次引入 `ui/tokens/tokens.css`、`ui/components/ui.css`；按框架调整相对路径。在根节点添加 `class="ty-root" data-ty-theme="paper" data-ty-material="solid"`，React 使用 className。主题由应用持久化，未设置属性不注入默认主题。Portal 必须位于同主题容器内，或给 portal 宿主同步主题和 ty-root，避免浮层丢失令牌。
 
 - React 19：按需复制 `adapters/react.tsx` 的 Button、Field、Card；已有组件优先，不替换全站组件。
+- React Select：按需使用 `adapters/select.tsx`，复用 Radix 的菜单行为，依赖与构建见 adapters/README.md。
 - Vue 3：可直接复制 `adapters/Button.vue`；表单、卡片用语义 HTML + ty 类。
 - 已用 shadcn/ui、shadcn-vue：额外引入 `adapters/shadcn.css`；保留库的 Dialog、Select、Tooltip 行为。只映射颜色，不声称覆盖库所有组件。旧 `hsl(var(--background))` 版本要升级映射，不能直接套此完整颜色变量。见 `adapters/README.md`。
 - 其他库：只映射官方主题接口。没有现成库时先用原生控件，复杂交互再按技术栈选成熟无障碍 primitives；不强装第二套库。
