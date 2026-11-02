@@ -17,6 +17,7 @@ const result = await build({
   bundle: true,
   minify: true,
   format: "iife",
+  supported: { "template-literal": false },
   jsx: "automatic",
   target: ["es2020"],
   define: { "process.env.NODE_ENV": '"production"' },
@@ -51,7 +52,7 @@ for (const input of Object.keys(result.metafile.inputs)) {
   if (!license && !existsSync(fallback))
     throw Error(`Missing license text: ${pkg.name}`);
   notices.push(
-    `${pkg.name} ${pkg.version} (${pkg.license})\n${readFileSync(license ?? fallback, "utf8")}`,
+    `${pkg.name} ${pkg.version} (${pkg.license})\n${readFileSync(license ?? fallback, "utf8").replace(/\r\n?/g, "\n")}`,
   );
 }
 writeFileSync(
