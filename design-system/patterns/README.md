@@ -7,3 +7,9 @@
 - 浮层：优先现有库；原生 dialog 必须 showModal()，提供标题、关闭按钮、Esc 和焦点返回。危险确认不承诺撤销；只有实现服务端取消才提供取消提交。
 
 可运行例子在 examples/index.html。示例的设置、状态和详情无后端，生产接入者负责真实 API、取消语义、权限和持久化。测试异步页面时覆盖快速切换、重复点击、离开后返回及服务端失败。
+
+## 今日工作台样本
+
+examples/index.html 是可操作样本；按顺序引入 tokens/tokens.css、components/ui.css、patterns/workspace.css，在 ty-root 上添加 workspace 类以启用组合样式。只复制需要的结构；数据、权限、持久化和定时器生命周期由消费应用接管。该样本使用原生 dialog、checkbox 与 select；复杂 React/Vue 控件在实际应用选用 shadcn/ui 或 shadcn-vue，不复制手写复杂行为替代成熟库。
+
+参考已实际查看的 [shadcn Dashboard](https://ui.shadcn.com/examples/dashboard) 的导航/操作层级和 [Tasks](https://ui.shadcn.com/examples/tasks) 的筛选/行密度。图标为本示例自绘 SVG，叶形只是工作区图标，不替代 brand/ 中正式云芽标志；没有复制付费组件源码或引入营销动效。

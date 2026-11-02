@@ -21,7 +21,7 @@
 
 ## 页面与验收
 
-`examples/index.html` 可直接以 file URL 打开，无网络、无服务。包含工作台、设置表单、列表/详情、空/加载/失败/恢复、原生 dialog；数据均为演示，保存仅模拟延迟和失败，不访问产品数据。`patterns/README.md` 说明业务接入合同。运行 `node scripts/build-tokens.mjs --check` 校验生成物；`node tests/contracts.mjs` 检查对比度、引用和适配合同。浏览器手动验收见 [清单](docs/acceptance.md)。
+`examples/index.html` 可直接以 file URL 打开，无网络、无服务。包含完整今日工作台、任务筛选与勾选、创建弹窗、快捷搜索、详情侧栏、专注计时与随记。任务创建支持延迟和失败测试，成功后只写入当前页内存，刷新重置，不访问产品数据。外观与失败测试在设置中；工作台组合样式可复用 patterns/workspace.css。`patterns/README.md` 说明业务接入合同。运行 `node scripts/build-tokens.mjs --check` 校验生成物；`node tests/contracts.mjs` 检查对比度、引用和适配合同。浏览器手动验收见 [清单](docs/acceptance.md)。
 
 Apple 采用策略见 [apple-platforms.md](docs/apple-platforms.md)。Web 的可选模糊不是系统 Liquid Glass，不根据 UA 自动打开。
 
