@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 # 初始化 Tongyun 系列新项目：AGENTS/CLAUDE、docs 骨架、.agents/{skills,notes}，并复制 Coding 套装 skill（tongyun 系列）。
-# 用法：bash scripts/init-project.sh [--edition tongyun|pro] <项目名> <一句话用途> [目标目录，默认 .]
+# 用法：bash scripts/init-project.sh [--ui paper|paper-dark|desktop|cloud|none] [--edition tongyun|pro] <项目名> <一句话用途> [目标目录，默认 .]
 #   --edition pro 为兼容别名；lite 已停用，现行技能使用来源仓商业许可。
 # 环境变量：FORCE=1 覆盖已存在文件；SKIP_SKILLS_SYNC=1 不同步 skill；TONGYUN_SKILLS_EDITION=tongyun|pro 同 --edition；
 #           skill 来源变量见 scripts/sync-skills.sh
 set -euo pipefail
 
+UI="none"
 EDITION="${TONGYUN_SKILLS_EDITION:-tongyun}"
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --ui) [[ $# -ge 2 && -n "$2" ]] || { echo "--ui 需要主题" >&2; exit 2; }; UI="$2"; shift 2 ;;
+    --ui=*) UI="${1#--ui=}"; shift ;;
     --edition) [[ $# -ge 2 && -n "$2" ]] || { echo "--edition 需要 tongyun 或 pro" >&2; exit 2; }; EDITION="$2"; shift 2 ;;
     --edition=*) [[ -n "${1#--edition=}" ]] || { echo "--edition 需要 tongyun 或 pro" >&2; exit 2; }; EDITION="${1#--edition=}"; shift ;;
     -*) echo "未知参数 $1" >&2; exit 2 ;;
@@ -19,6 +22,11 @@ case "$EDITION" in
   tongyun|pro) ;;
   lite) echo "lite 已停用；现行 tongyun-skills 为商业技能库，请确认许可后使用 --edition tongyun。" >&2; exit 2 ;;
   *) echo "版本只能是 tongyun 或 pro，收到：$EDITION" >&2; exit 2 ;;
+esac
+
+case "$UI" in
+  none|paper|paper-dark|desktop|cloud) ;;
+  *) echo "--ui 只能是 none、paper、paper-dark、desktop、cloud" >&2; exit 2 ;;
 esac
 
 NAME="${1:-my-project}"
@@ -100,6 +108,25 @@ for file in "$TPL/docs/decisions/"*; do
   [[ -f "$file" ]] || continue
   copy_file "$file" "$TARGET/docs/decisions/$(basename "$file")"
 done
+
+# UI assets are opt-in, local and dependency-free. Do not overwrite project files by default.
+if [[ "$UI" != "none" ]]; then
+  # Keep a customized UI tree together instead of mixing asset versions.
+  if [[ -e "$TARGET/ui" && "$FORCE" != "1" ]]; then
+    echo "跳过 $TARGET/ui（整组资产已存在；请审阅版本后手动升级）"
+  else
+    while IFS= read -r src; do
+      rel="${src#"$ROOT/design-system/"}"
+      mkdir -p "$TARGET/ui/$(dirname "$rel")"
+      copy_file "$src" "$TARGET/ui/$rel"
+    done < <(find "$ROOT/design-system" -type f | LC_ALL=C sort)
+  fi
+  if [[ ! -e "$TARGET/DESIGN.md" || "$FORCE" == "1" ]]; then
+    sed "s/{{UI_THEME}}/$UI/g" "$TPL/DESIGN.md" > "$TARGET/DESIGN.md"
+  else
+    echo "跳过 $TARGET/DESIGN.md（已存在）"
+  fi
+fi
 
 # CLAUDE.md 与 AGENTS.md 同一份（同 deepseek-harness：软链）
 make_link AGENTS.md "$TARGET/CLAUDE.md"

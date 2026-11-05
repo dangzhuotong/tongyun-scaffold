@@ -1,5 +1,7 @@
 # 项目级 Tongyun Coding 技能
 
+UI 资产由 `--ui` 生成，Agent UI 规范由既有同步入口取得。来源仓的 `skills/tongyun-ui-design/references/design-system-v01.md` 说明本设计系统接入。生成后先读根 DESIGN.md，再读该 Skill；SOURCES.md 记录实际来源版本。离线跳过同步只能得到设计资产，不能声称 Agent Skill 已安装。
+
 技能是生成项目中的真实文件，来源为商业许可仓 `dangzhuotong/tongyun-skills`。脚手架只存模板与同步脚本，不存技能正文。技能使用与分发遵循来源许可，不能因脚手架是 MIT 就视为开源；项目公开前核对授权。
 
 ## 现行目录
